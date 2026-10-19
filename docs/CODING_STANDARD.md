@@ -22,7 +22,7 @@ This project follows the **C++ Core Guidelines** (Stroustrup and Sutter), with t
 | Private data members | camelCase + trailing `_` | `status_`, `versions_` |
 | Constants | `k` + PascalCase | `kMaxFileBytes` |
 | Enum values | UPPER_CASE (they match the database text) | `SubmissionStatus::LATE` |
-| Files | one class per file, named after it | `Submission.hpp`, `Submission.cpp` |
+| Files | one class per file, named after it; small related types may share a file | `Submission.hpp`, `Roles.hpp` |
 
 Everything is in `namespace lms`.
 
