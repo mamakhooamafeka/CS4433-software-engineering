@@ -88,4 +88,9 @@ std::vector<Assignment> AssignmentService::assignmentsOf(const User& user, int c
     return assignments_.byCourse(courseId);
 }
 
+std::vector<UserRecord> AssignmentService::studentsOf(const Lecturer& lecturer, int courseId) {
+    requireCourseAccess(lecturer, requireCourse(courseId));
+    return users_.studentsOfCourse(courseId);
+}
+
 } // namespace lms

@@ -41,25 +41,42 @@ std::vector<AssignmentSummary> ModerationService::listDepartmentAssignments(
     return out;
 }
 
-std::vector<SubmissionView> ModerationService::listMarked(const HeadOfDepartment& hod,
-                                                          int assignmentId) {
+std::vector<SubmissionView> ModerationService::listWithStatus(
+    const HeadOfDepartment& hod, int assignmentId,
+    std::initializer_list<SubmissionStatus> statuses) {
     requireAssignment(hod, assignmentId);
     std::vector<SubmissionView> out;
-    for (const Submission& s :
-         submissions_.byAssignmentAndStatus(assignmentId, SubmissionStatus::MARKED)) {
-        SubmissionView v;
-        v.submissionId = s.getId();
-        v.studentId = s.getStudentId();
-        auto student = users_.findById(s.getStudentId());
-        v.studentName = student ? student->getFullName() : "?";
-        v.status = s.getStatus();
-        v.latestSubmittedAt = s.latestVersion().submittedAt;
-        v.versionCount = static_cast<int>(s.getVersions().size());
-        v.daysLate = s.getMark() ? s.getMark()->daysLate : 0;
-        v.mark = s.getMark();
-        out.push_back(v);
+    for (SubmissionStatus st : statuses) {
+        for (const Submission& s : submissions_.byAssignmentAndStatus(assignmentId, st)) {
+            SubmissionView v;
+            v.submissionId = s.getId();
+            v.studentId = s.getStudentId();
+            v.studentName = nameOf(s.getStudentId());
+            v.status = s.getStatus();
+            v.latestSubmittedAt = s.latestVersion().submittedAt;
+            v.versionCount = static_cast<int>(s.getVersions().size());
+            v.daysLate = s.getMark() ? s.getMark()->daysLate : 0;
+            v.mark = s.getMark();
+            out.push_back(v);
+        }
     }
     return out;
+}
+
+std::vector<SubmissionView> ModerationService::listMarked(const HeadOfDepartment& hod,
+                                                          int assignmentId) {
+    return listWithStatus(hod, assignmentId, {SubmissionStatus::MARKED});
+}
+
+std::vector<SubmissionView> ModerationService::listAmendable(const HeadOfDepartment& hod,
+                                                             int assignmentId) {
+    return listWithStatus(hod, assignmentId,
+                          {SubmissionStatus::MARKED, SubmissionStatus::RELEASED});
+}
+
+std::string ModerationService::nameOf(int userId) {
+    auto u = users_.findById(userId);
+    return u ? u->getFullName() : "user " + std::to_string(userId);
 }
 
 void ModerationService::approve(const HeadOfDepartment& hod,

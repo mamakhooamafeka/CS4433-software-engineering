@@ -33,6 +33,10 @@ public:
 
     std::vector<AssignmentSummary> listDepartmentAssignments(const HeadOfDepartment& hod);
     std::vector<SubmissionView> listMarked(const HeadOfDepartment& hod, int assignmentId);
+    // MARKED and RELEASED submissions: the ones an HoD may amend.
+    std::vector<SubmissionView> listAmendable(const HeadOfDepartment& hod, int assignmentId);
+    // Full name of a user, for showing who made an audit entry.
+    std::string nameOf(int userId);
     // Approves several submissions in one transaction: all or none.
     void approve(const HeadOfDepartment& hod, const std::vector<int>& submissionIds);
     // FR-16: changes the raw mark, re-applies BR-01, keeps the lecturer's feedback.
@@ -47,6 +51,8 @@ public:
 private:
     int requireDepartment(const HeadOfDepartment& hod);
     Assignment requireAssignment(const HeadOfDepartment& hod, int assignmentId);
+    std::vector<SubmissionView> listWithStatus(const HeadOfDepartment& hod, int assignmentId,
+                                               std::initializer_list<SubmissionStatus> statuses);
 
     IAssignmentRepository& assignments_;
     ICourseRepository& courses_;

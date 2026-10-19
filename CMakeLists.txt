@@ -36,9 +36,12 @@ target_include_directories(lms_core PUBLIC src ${CMAKE_BINARY_DIR}/generated)
 target_link_libraries(lms_core PUBLIC SQLite::SQLite3 Sodium::Sodium PRIVATE lms_warnings)
 
 # ---- Console application ---------------------------------------------------
+# The menus are a library too, so the tests can drive them with scripted input.
 file(GLOB_RECURSE LMS_UI_SOURCES CONFIGURE_DEPENDS src/presentation/*.cpp)
-add_executable(lms app/main.cpp ${LMS_UI_SOURCES})
-target_link_libraries(lms PRIVATE lms_core lms_warnings)
+add_library(lms_ui STATIC ${LMS_UI_SOURCES})
+target_link_libraries(lms_ui PUBLIC lms_core PRIVATE lms_warnings)
+add_executable(lms app/main.cpp)
+target_link_libraries(lms PRIVATE lms_ui lms_warnings)
 
 # ---- Tests -----------------------------------------------------------------
 if(LMS_BUILD_TESTS)
@@ -56,6 +59,6 @@ if(LMS_BUILD_TESTS)
 
   file(GLOB_RECURSE LMS_TEST_SOURCES CONFIGURE_DEPENDS tests/*.cpp)
   add_executable(lms_tests ${LMS_TEST_SOURCES})
-  target_link_libraries(lms_tests PRIVATE lms_core Catch2::Catch2WithMain lms_warnings)
+  target_link_libraries(lms_tests PRIVATE lms_ui Catch2::Catch2WithMain lms_warnings)
   catch_discover_tests(lms_tests)
 endif()

@@ -63,6 +63,7 @@ std::vector<SubmissionView> MarkingService::listSubmissions(const Lecturer& lect
             v.status = s.getStatus();
             v.latestSubmittedAt = s.latestVersion().submittedAt;
             v.versionCount = static_cast<int>(s.getVersions().size());
+            v.filePath = s.latestVersion().storedPath;
             v.daysLate = DeadlineCalculator::daysLate(
                 v.latestSubmittedAt, deadlines_.effectiveDeadline(*a, s.getStudentId()));
             v.mark = s.getMark();

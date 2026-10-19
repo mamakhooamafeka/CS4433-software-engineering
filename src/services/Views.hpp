@@ -55,6 +55,7 @@ struct SubmissionView {
     SubmissionStatus status = SubmissionStatus::SUBMITTED;
     DateTime latestSubmittedAt;
     int versionCount = 0;
+    std::string filePath;   // latest version, so the lecturer can open it
     int daysLate = 0;
     std::optional<Mark> mark;
 };

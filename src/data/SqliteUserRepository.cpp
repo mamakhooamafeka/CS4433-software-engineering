@@ -95,4 +95,16 @@ std::vector<UserRecord> SqliteUserRepository::listAll() {
     return out;
 }
 
+std::vector<UserRecord> SqliteUserRepository::studentsOfCourse(int courseId) {
+    Statement s = db_.prepare(
+        "select u.id, u.username, u.full_name, u.password_hash, u.role, u.active, "
+        "u.failed_attempts, u.locked_until, u.must_change_password from user_account u "
+        "join enrolment e on e.student_id = u.id "
+        "where e.course_id = ? and e.withdrawn = 0 order by u.full_name");
+    s.bind(1, courseId);
+    std::vector<UserRecord> out;
+    while (s.step()) out.push_back(readRecord(s));
+    return out;
+}
+
 } // namespace lms

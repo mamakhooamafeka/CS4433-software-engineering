@@ -24,7 +24,7 @@ struct Flow : test::World {
     LocalFileStore files{dir / "store"};
     TenPercentPerDayPolicy policy;
     AuditService auditService{audit, clock};
-    AssignmentService assignmentsSvc{assignments, courses, submissions, clock, db};
+    AssignmentService assignmentsSvc{assignments, courses, submissions, users, clock, db};
     SubmissionService submit{assignments, courses, submissions, files, clock, db};
     MarkingService marking{assignments, courses, submissions, users,
                            policy,      auditService, clock, db};

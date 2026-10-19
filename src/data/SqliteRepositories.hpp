@@ -16,6 +16,7 @@ public:
     int insert(const User& user) override;
     void update(const User& user) override;
     std::vector<UserRecord> listAll() override;
+    std::vector<UserRecord> studentsOfCourse(int courseId) override;
 
 private:
     std::unique_ptr<User> load(Statement& s);

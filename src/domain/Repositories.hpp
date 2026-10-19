@@ -24,6 +24,8 @@ public:
     virtual int insert(const User& user) = 0;
     virtual void update(const User& user) = 0;
     virtual std::vector<UserRecord> listAll() = 0;
+    // Active enrolled students of a course, for choosing who gets an extension.
+    virtual std::vector<UserRecord> studentsOfCourse(int courseId) = 0;
 };
 
 class ICourseRepository {
