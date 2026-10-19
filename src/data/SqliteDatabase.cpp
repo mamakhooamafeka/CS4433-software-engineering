@@ -204,6 +204,31 @@ void SqliteDatabase::backupTo(const std::string& path) {
     }
 }
 
+void SqliteDatabase::restoreFrom(const std::string& path) {
+    sqlite3* src = nullptr;
+    if (sqlite3_open_v2(path.c_str(), &src, SQLITE_OPEN_READONLY, nullptr) != SQLITE_OK) {
+        sqlite3_close(src);
+        throw ValidationError("That backup file cannot be opened.");
+    }
+    {
+        Statement check(src, "pragma integrity_check");
+        if (!check.step() || check.getText(0) != "ok") {
+            sqlite3_close(src);
+            throw ValidationError("That backup is damaged, so it was not restored.");
+        }
+    }
+    sqlite3_backup* backup = sqlite3_backup_init(handle_, "main", src, "main");
+    int rc = SQLITE_ERROR;
+    if (backup) {
+        rc = sqlite3_backup_step(backup, -1);
+        sqlite3_backup_finish(backup);
+    }
+    sqlite3_close(src);
+    if (rc != SQLITE_DONE) {
+        throwSqliteError(handle_, rc, "restore");
+    }
+}
+
 void SqliteDatabase::begin() {
     exec("begin immediate;");
 }

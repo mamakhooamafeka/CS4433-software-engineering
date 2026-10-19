@@ -83,6 +83,8 @@ public:
     bool integrityCheck();
     // Copies the whole database to another file with SQLite's online backup API (FR-21).
     void backupTo(const std::string& path);
+    // Replaces the open database with a backup copy (FR-21). The backup is checked first.
+    void restoreFrom(const std::string& path);
 
     void begin() override;
     void commit() override;

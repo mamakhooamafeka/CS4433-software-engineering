@@ -17,6 +17,7 @@ public:
                      int versionNo) override;
     void remove(const std::string& storedPath) override;
     void copyAll(const std::string& destinationDir) override;
+    void restoreFrom(const std::string& sourceDir) override;
 
     // SHA-256 of a file as 64 hex characters (libsodium).
     static std::string sha256Of(const std::filesystem::path& file);

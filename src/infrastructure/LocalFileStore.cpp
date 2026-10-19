@@ -114,4 +114,21 @@ void LocalFileStore::copyAll(const std::string& destinationDir) {
     }
 }
 
+void LocalFileStore::restoreFrom(const std::string& sourceDir) {
+    std::error_code ec;
+    if (!fs::is_directory(sourceDir, ec)) {
+        throw ValidationError("That backup has no submitted files folder.");
+    }
+    fs::remove_all(root_, ec);
+    if (!ec) fs::create_directories(root_, ec);
+    if (!ec) {
+        fs::copy(sourceDir, root_,
+                 fs::copy_options::recursive | fs::copy_options::overwrite_existing, ec);
+    }
+    if (ec) {
+        ErrorLog::write("restoreFrom " + sourceDir + ": " + ec.message());
+        throw DataAccessError("The submitted files could not be restored.");
+    }
+}
+
 } // namespace lms

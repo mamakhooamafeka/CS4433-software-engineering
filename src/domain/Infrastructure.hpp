@@ -34,6 +34,8 @@ public:
                              int versionNo) = 0;
     virtual void remove(const std::string& storedPath) = 0;
     virtual void copyAll(const std::string& destinationDir) = 0;
+    // Replaces the stored files with those in a backup folder (FR-21 restore).
+    virtual void restoreFrom(const std::string& sourceDir) = 0;
 };
 
 class IClock {
