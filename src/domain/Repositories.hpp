@@ -114,4 +114,4 @@ private:
     bool done_ = false;
 };
 
-} // namespace lms
+}  // namespace lms

@@ -9,8 +9,8 @@ std::vector<AssignmentView> SubmissionService::listOpenAssignments(const Student
     for (const Course& c : courses_.coursesOfStudent(student.getId())) {
         for (const Assignment& a : assignments_.byCourse(c.getId())) {
             if (submissions_.hasReleased(a.getId())) continue;
-            AssignmentView v{a, c, deadlines_.effectiveDeadline(a, student.getId()), false,
-                             std::nullopt, false};
+            AssignmentView v{
+                a, c, deadlines_.effectiveDeadline(a, student.getId()), false, std::nullopt, false};
             v.hasExtension = v.effectiveDeadline != a.getDeadline();
             if (auto s = submissions_.find(a.getId(), student.getId())) v.status = s->getStatus();
             out.push_back(v);
@@ -53,7 +53,7 @@ Receipt SubmissionService::submit(const Student& student, int assignmentId,
                                   const std::string& path) {
     const Assignment a = requireOpenAssignment(student, assignmentId);
     const DateTime deadline = deadlines_.effectiveDeadline(a, student.getId());
-    const DateTime now = clock_.now();   // server time is the submission time (C2)
+    const DateTime now = clock_.now();  // server time is the submission time (C2)
 
     Submission sub = submissions_.find(assignmentId, student.getId())
                          .value_or(Submission(assignmentId, student.getId()));
@@ -95,14 +95,14 @@ Receipt SubmissionService::submit(const Student& student, int assignmentId,
 std::vector<ResultView> SubmissionService::listReleasedResults(const Student& student) {
     std::vector<ResultView> out;
     for (const Submission& s : submissions_.byStudent(student.getId())) {
-        if (s.getStatus() != SubmissionStatus::RELEASED || !s.getMark()) continue;
+        const std::optional<Mark> mark = s.getMark();
+        if (s.getStatus() != SubmissionStatus::RELEASED || !mark) continue;
         auto a = assignments_.findById(s.getAssignmentId());
         if (!a) continue;
         auto c = courses_.findCourse(a->getCourseId());
-        out.push_back(ResultView{c ? c->getCode() : "", a->getTitle(), a->getMaxMark(),
-                                 *s.getMark()});
+        out.push_back(ResultView{c ? c->getCode() : "", a->getTitle(), a->getMaxMark(), *mark});
     }
     return out;
 }
 
-} // namespace lms
+}  // namespace lms

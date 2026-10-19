@@ -7,10 +7,11 @@ namespace lms {
 
 int ModerationService::requireDepartment(const HeadOfDepartment& hod) {
     requireRole(hod, Role::HOD);
-    if (!hod.getDepartmentId()) {
+    const std::optional<int> dept = hod.getDepartmentId();
+    if (!dept) {
         throw BusinessRuleError("You are not assigned to a department yet. Please see the admin.");
     }
-    return *hod.getDepartmentId();
+    return *dept;
 }
 
 Assignment ModerationService::requireAssignment(const HeadOfDepartment& hod, int assignmentId) {
@@ -18,7 +19,7 @@ Assignment ModerationService::requireAssignment(const HeadOfDepartment& hod, int
     auto a = assignments_.findById(assignmentId);
     auto c = a ? courses_.findCourse(a->getCourseId()) : std::nullopt;
     if (!a || !c) throw ValidationError("There is no assignment with that number.");
-    requireCourseAccess(hod, *c);   // BR-07: own department only
+    requireCourseAccess(hod, *c);  // BR-07: own department only
     return *a;
 }
 
@@ -55,8 +56,8 @@ std::vector<SubmissionView> ModerationService::listWithStatus(
             v.status = s.getStatus();
             v.latestSubmittedAt = s.latestVersion().submittedAt;
             v.versionCount = static_cast<int>(s.getVersions().size());
-            v.daysLate = s.getMark() ? s.getMark()->daysLate : 0;
             v.mark = s.getMark();
+            v.daysLate = v.mark ? v.mark->daysLate : 0;
             out.push_back(v);
         }
     }
@@ -98,12 +99,13 @@ Mark ModerationService::amend(const HeadOfDepartment& hod, int submissionId, dou
     auto s = submissions_.findById(submissionId);
     if (!s) throw ValidationError("There is no submission with that number.");
     const Assignment a = requireAssignment(hod, s->getAssignmentId());
-    const std::string why = requireText(reason, "The reason", 1, 500);   // A6: mandatory
-    if (!s->getMark()) throw BusinessRuleError("This submission has not been marked yet.");
+    const std::string why = requireText(reason, "The reason", 1, 500);  // A6: mandatory
+    const std::optional<Mark> current = s->getMark();
+    if (!current) throw BusinessRuleError("This submission has not been marked yet.");
     requireRawMark(rawMark, a.getMaxMark());
 
-    const Mark oldMark = *s->getMark();
-    Mark m = oldMark;   // keeps the lecturer's feedback and daysLate
+    const Mark& oldMark = *current;
+    Mark m = oldMark;  // keeps the lecturer's feedback and daysLate
     const PenaltyResult p = policy_.apply(rawMark, a.getMaxMark(), oldMark.daysLate);
     m.rawMark = roundToTenth(rawMark);
     m.deduction = p.deduction;
@@ -137,7 +139,7 @@ int ModerationService::releaseAll(const HeadOfDepartment& hod, int assignmentId)
         throw BusinessRuleError("There are no moderated submissions to release.");
     }
     const DateTime now = clock_.now();
-    Transaction tx(tx_);   // all released or none (FR-17)
+    Transaction tx(tx_);  // all released or none (FR-17)
     for (Submission& s : ready) {
         s.release(hod.getId(), now);
         submissions_.save(s);
@@ -152,4 +154,4 @@ std::vector<AuditEntry> ModerationService::viewAudit(const HeadOfDepartment& hod
     return auditLog_.query(filter);
 }
 
-} // namespace lms
+}  // namespace lms

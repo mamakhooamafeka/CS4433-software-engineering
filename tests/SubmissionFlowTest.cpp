@@ -5,8 +5,8 @@
 #include <catch2/catch_test_macros.hpp>
 
 using namespace lms;
-using lms::test::Flow;
 using Catch::Approx;
+using lms::test::Flow;
 using std::chrono::hours;
 using std::chrono::seconds;
 namespace fs = std::filesystem;
@@ -32,7 +32,7 @@ TEST_CASE("Late submission is accepted and marked LATE (C2)", "[integration][sub
 TEST_CASE("Files are validated: missing, empty and over 10 MB are refused",
           "[integration][submit]") {
     Flow f;
-    auto& s = f.student(f.stuId);
+    const auto& s = f.student(f.stuId);
     CHECK_THROWS_AS(f.submit.submit(s, f.asgId, (f.dir / "nope.txt").string()), ValidationError);
     CHECK_THROWS_AS(f.submit.submit(s, f.asgId, f.makeFile("empty.txt", 0)), ValidationError);
     CHECK_THROWS_AS(f.submit.submit(s, f.asgId, f.makeFile("big.bin", 10 * 1024 * 1024 + 1)),
@@ -55,7 +55,7 @@ TEST_CASE("Resubmission keeps every version until the deadline (FR-12, BR-03)",
     CHECK(r2.versionNo == 2);
     const auto sub = f.submissions.find(f.asgId, f.stuId);
     REQUIRE(sub->getVersions().size() == 2);
-    CHECK(fs::exists(sub->getVersions()[0].storedPath));   // the old file is still there
+    CHECK(fs::exists(sub->getVersions()[0].storedPath));  // the old file is still there
 
     f.clock.set(f.deadline + seconds(1));
     CHECK_THROWS_AS(f.submit.submit(f.student(f.stuId), f.asgId, f.makeFile("v3.txt", 7)),
@@ -64,7 +64,7 @@ TEST_CASE("Resubmission keeps every version until the deadline (FR-12, BR-03)",
 
 TEST_CASE("Marking applies the BR-01 penalty and writes an audit row", "[integration][mark]") {
     Flow f;
-    f.clock.set(f.deadline + hours(25));   // 2 days late
+    f.clock.set(f.deadline + hours(25));  // 2 days late
     f.submit.submit(f.student(f.stuId), f.asgId, f.makeFile("a.txt", 5));
     const int subId = f.submissions.find(f.asgId, f.stuId)->getId();
     const Mark m = f.marking.mark(f.lecturer(), subId, 80, "Well structured");
@@ -114,9 +114,9 @@ TEST_CASE("An extension needs a reason, moves the deadline later and fixes LATE 
     f.submit.submit(f.student(f.stuId), f.asgId, f.makeFile("a.txt", 5));
     REQUIRE(f.submissions.find(f.asgId, f.stuId)->getStatus() == SubmissionStatus::LATE);
 
-    CHECK_THROWS_AS(f.assignmentsSvc.grantExtension(f.lecturer(), f.asgId, f.stuId,
-                                                    f.deadline + hours(24), ""),
-                    ValidationError);
+    CHECK_THROWS_AS(
+        f.assignmentsSvc.grantExtension(f.lecturer(), f.asgId, f.stuId, f.deadline + hours(24), ""),
+        ValidationError);
     CHECK_THROWS_AS(f.assignmentsSvc.grantExtension(f.lecturer(), f.asgId, f.stuId,
                                                     f.deadline - hours(1), "Ill"),
                     BusinessRuleError);
@@ -125,7 +125,7 @@ TEST_CASE("An extension needs a reason, moves the deadline later and fixes LATE 
     CHECK(f.submissions.find(f.asgId, f.stuId)->getStatus() == SubmissionStatus::SUBMITTED);
 
     const int subId = f.submissions.find(f.asgId, f.stuId)->getId();
-    CHECK(f.marking.mark(f.lecturer(), subId, 70, "Good").daysLate == 0);   // no penalty now
+    CHECK(f.marking.mark(f.lecturer(), subId, 70, "Good").daysLate == 0);  // no penalty now
 }
 
 TEST_CASE("An extension can be granted before the student submits (DC-02)",

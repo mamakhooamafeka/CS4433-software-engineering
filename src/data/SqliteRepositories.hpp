@@ -36,8 +36,7 @@ public:
     std::vector<Course> listCourses() override;
     int insertDepartment(const std::string& name) override;
     void setHeadOfDepartment(int departmentId, int hodUserId) override;
-    int insertCourse(const std::string& code, const std::string& title,
-                     int departmentId) override;
+    int insertCourse(const std::string& code, const std::string& title, int departmentId) override;
     void addLecturer(int courseId, int lecturerId) override;
     void enrol(int courseId, int studentId, DateTime at) override;
     void withdraw(int courseId, int studentId) override;
@@ -88,4 +87,4 @@ private:
     SqliteDatabase& db_;
 };
 
-} // namespace lms
+}  // namespace lms

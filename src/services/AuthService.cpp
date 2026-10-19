@@ -6,10 +6,9 @@
 namespace lms {
 namespace {
 const char* const kLoginFailed = "Incorrect username or password.";
-} // namespace
+}  // namespace
 
-std::unique_ptr<User> AuthService::login(const std::string& username,
-                                         const std::string& password) {
+std::unique_ptr<User> AuthService::login(const std::string& username, const std::string& password) {
     const DateTime now = clock_.now();
     std::unique_ptr<User> user = users_.findByUsername(username);
     if (!user) {
@@ -87,9 +86,10 @@ int AuthService::pendingWorkCount(const User& user) {
                 }
             }
             break;
-        case Role::ADMIN: break;
+        case Role::ADMIN:
+            break;
     }
     return count;
 }
 
-} // namespace lms
+}  // namespace lms

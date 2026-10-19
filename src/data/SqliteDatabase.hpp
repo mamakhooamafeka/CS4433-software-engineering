@@ -100,4 +100,4 @@ private:
 // Throws the right exception for an SQLite result code; detail goes to the error log.
 [[noreturn]] void throwSqliteError(sqlite3* db, int rc, const std::string& context);
 
-} // namespace lms
+}  // namespace lms

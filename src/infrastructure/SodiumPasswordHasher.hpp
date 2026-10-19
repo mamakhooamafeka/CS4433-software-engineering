@@ -8,9 +8,9 @@ namespace lms {
 
 class SodiumPasswordHasher : public IPasswordHasher {
 public:
-    SodiumPasswordHasher();   // throws DataAccessError if libsodium cannot start
+    SodiumPasswordHasher();  // throws DataAccessError if libsodium cannot start
     std::string hash(const std::string& password) override;
     bool verify(const std::string& password, const std::string& storedHash) override;
 };
 
-} // namespace lms
+}  // namespace lms

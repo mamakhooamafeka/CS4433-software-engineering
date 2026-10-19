@@ -50,8 +50,7 @@ void Submission::addVersion(SubmissionVersion v, DateTime effectiveDeadline) {
 
 // BR-03: only before the effective deadline and before marking.
 bool Submission::canResubmit(DateTime now, DateTime effectiveDeadline) const {
-    return !versions_.empty() && status_ == SubmissionStatus::SUBMITTED &&
-           now <= effectiveDeadline;
+    return !versions_.empty() && status_ == SubmissionStatus::SUBMITTED && now <= effectiveDeadline;
 }
 
 void Submission::recordMark(const Mark& m) {
@@ -105,4 +104,4 @@ const SubmissionVersion& Submission::latestVersion() const {
     return versions_.back();
 }
 
-} // namespace lms
+}  // namespace lms

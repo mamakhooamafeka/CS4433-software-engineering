@@ -14,8 +14,8 @@ using std::chrono::hours;
 namespace {
 
 struct Moderation : Flow {
-    ModerationService moderation{assignments, courses, submissions, users, audit,
-                                 policy,      auditService, clock, db};
+    ModerationService moderation{assignments, courses,      submissions, users, audit,
+                                 policy,      auditService, clock,       db};
     int hodId, otherHodId, subId;
 
     Moderation() {
@@ -57,6 +57,10 @@ TEST_CASE("Approve, preview and release, then the student sees the result (FR-17
     REQUIRE(results.size() == 1);
     CHECK(results[0].mark.finalMark == Approx(70));
     CHECK(results[0].mark.feedback == "Good analysis");
+
+    // BR-06: once released, the assignment is closed to new submissions.
+    CHECK_THROWS_AS(m.submit.submit(m.student(m.stuId), m.asgId, m.makeFile("late.txt", 5)),
+                    BusinessRuleError);
 }
 
 TEST_CASE("Release with nothing moderated is refused", "[integration][moderation]") {
@@ -87,11 +91,11 @@ TEST_CASE("Amend needs a reason, re-applies BR-01 and is audited (FR-16, FR-19)"
     CHECK(m.submissions.findById(m.subId)->getStatus() == SubmissionStatus::MODERATED);
 
     m.moderation.releaseAll(m.hod(m.hodId), m.asgId);
-    m.moderation.amend(m.hod(m.hodId), m.subId, 72, "Appeal upheld");   // after release (A6)
+    m.moderation.amend(m.hod(m.hodId), m.subId, 72, "Appeal upheld");  // after release (A6)
     CHECK(m.submissions.findById(m.subId)->getStatus() == SubmissionStatus::RELEASED);
 
     const auto log = m.moderation.viewAudit(m.hod(m.hodId), AuditFilter{});
-    REQUIRE(log.size() == 3);   // initial, amendment, amendment
+    REQUIRE(log.size() == 3);  // initial, amendment, amendment
     CHECK(log[2].changeType == ChangeType::AMENDMENT);
     CHECK(log[2].oldRawMark == Approx(75));
     CHECK(log[2].newRawMark == Approx(72));
@@ -109,7 +113,7 @@ TEST_CASE("An HoD's audit view never shows another department (FR-20)",
           "[integration][moderation]") {
     Moderation m;
     AuditFilter tryOther;
-    tryOther.departmentId = 12345;   // ignored: replaced by the HoD's own department
+    tryOther.departmentId = 12345;  // ignored: replaced by the HoD's own department
     CHECK(m.moderation.viewAudit(m.hod(m.otherHodId), tryOther).empty());
     CHECK(m.moderation.viewAudit(m.hod(m.hodId), tryOther).size() == 1);
 }
@@ -119,13 +123,13 @@ TEST_CASE("Backup once per day, and restore brings the old data back (FR-21)",
     Moderation m;
     BackupService backup(m.db, m.files, m.clock, (m.dir / "backups").string());
     CHECK(backup.backupIfFirstStartToday());
-    CHECK_FALSE(backup.backupIfFirstStartToday());   // same day: no second backup
+    CHECK_FALSE(backup.backupIfFirstStartToday());  // same day: no second backup
     const auto adminId = m.addUser(Role::ADMIN, "admin");
     const auto admin = m.user(adminId);
     const auto names = backup.listBackups(*admin);
     REQUIRE(names.size() == 1);
 
-    m.moderation.approve(m.hod(m.hodId), {m.subId});   // a change after the backup
+    m.moderation.approve(m.hod(m.hodId), {m.subId});  // a change after the backup
     backup.restore(*admin, names[0]);
     CHECK(m.submissions.findById(m.subId)->getStatus() == SubmissionStatus::MARKED);
     CHECK_THROWS_AS(backup.listBackups(*m.user(m.lecId)), AccessDeniedError);

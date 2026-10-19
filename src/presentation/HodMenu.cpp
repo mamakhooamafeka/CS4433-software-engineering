@@ -18,16 +18,25 @@ std::string describe(const SubmissionView& v) {
     return text;
 }
 
-} // namespace
+}  // namespace
 
 void HodMenu::handle(User& user, MenuOption option) {
     const auto& hod = dynamic_cast<const HeadOfDepartment&>(user);
     switch (option) {
-        case MenuOption::MODERATE_MARKS: moderate(hod); break;
-        case MenuOption::AMEND_MARK: amend(hod); break;
-        case MenuOption::RELEASE_MARKS: release(hod); break;
-        case MenuOption::VIEW_AUDIT_LOG: viewAudit(hod); break;
-        default: break;
+        case MenuOption::MODERATE_MARKS:
+            moderate(hod);
+            break;
+        case MenuOption::AMEND_MARK:
+            amend(hod);
+            break;
+        case MenuOption::RELEASE_MARKS:
+            release(hod);
+            break;
+        case MenuOption::VIEW_AUDIT_LOG:
+            viewAudit(hod);
+            break;
+        default:
+            break;
     }
 }
 
@@ -131,9 +140,9 @@ void HodMenu::release(const HeadOfDepartment& hod) {
 // UC14 (FR-20): always limited to the HoD's own department by the service.
 void HodMenu::viewAudit(const HeadOfDepartment& hod) {
     AuditFilter filter;
-    const int how = io_.choose("Audit log", {"All mark changes in my department",
-                                             "Only one course", "Only one assignment",
-                                             "Only one student (by number)"});
+    const int how =
+        io_.choose("Audit log", {"All mark changes in my department", "Only one course",
+                                 "Only one assignment", "Only one student (by number)"});
     if (how < 0) return;
     if (how == 1 || how == 2) {
         const auto a = pickAssignment(hod);
@@ -149,14 +158,15 @@ void HodMenu::viewAudit(const HeadOfDepartment& hod) {
     const auto entries = moderation_.viewAudit(hod, filter);
     io_.heading("Audit log (" + std::to_string(entries.size()) + " entries)");
     for (const AuditEntry& e : entries) {
-        const std::string before =
-            e.oldFinalMark ? showMark(*e.oldRawMark) + "/" + showMark(*e.oldFinalMark) : "-";
+        const std::string before = e.oldRawMark && e.oldFinalMark
+                                       ? showMark(*e.oldRawMark) + "/" + showMark(*e.oldFinalMark)
+                                       : "-";
         io_.info(showTime(e.changedAt) + " " + toString(e.changeType) + " submission " +
-                 std::to_string(e.submissionId) + ": " + before + " -> " +
-                 showMark(e.newRawMark) + "/" + showMark(e.newFinalMark));
+                 std::to_string(e.submissionId) + ": " + before + " -> " + showMark(e.newRawMark) +
+                 "/" + showMark(e.newFinalMark));
         io_.info("    by " + moderation_.nameOf(e.changedBy) +
                  (e.reason.empty() ? "" : ", reason: " + e.reason));
     }
 }
 
-} // namespace lms
+}  // namespace lms

@@ -31,4 +31,4 @@ private:
     std::string backupRoot_;
 };
 
-} // namespace lms
+}  // namespace lms

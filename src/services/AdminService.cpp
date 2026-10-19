@@ -106,8 +106,8 @@ void AdminService::assignHeadOfDepartment(const User& admin, int departmentId, i
     courses_.setHeadOfDepartment(departmentId, hodUserId);
 }
 
-int AdminService::createCourse(const User& admin, const std::string& code,
-                               const std::string& title, int departmentId) {
+int AdminService::createCourse(const User& admin, const std::string& code, const std::string& title,
+                               int departmentId) {
     requireRole(admin, Role::ADMIN);
     if (!courses_.findDepartment(departmentId)) {
         throw ValidationError("There is no department with that number.");
@@ -149,4 +149,4 @@ std::vector<Course> AdminService::listCourses(const User& admin) {
     return courses_.listCourses();
 }
 
-} // namespace lms
+}  // namespace lms

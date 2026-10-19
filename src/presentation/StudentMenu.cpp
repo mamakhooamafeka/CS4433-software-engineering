@@ -18,15 +18,22 @@ std::string statusText(const AssignmentView& v) {
     return v.status ? toString(*v.status) : "not submitted";
 }
 
-} // namespace
+}  // namespace
 
 void StudentMenu::handle(User& user, MenuOption option) {
     const auto& student = dynamic_cast<const Student&>(user);
     switch (option) {
-        case MenuOption::VIEW_MY_ASSIGNMENTS: viewAssignments(student); break;
-        case MenuOption::SUBMIT_ASSIGNMENT: submit(student); break;
-        case MenuOption::VIEW_RELEASED_RESULTS: viewResults(student); break;
-        default: break;
+        case MenuOption::VIEW_MY_ASSIGNMENTS:
+            viewAssignments(student);
+            break;
+        case MenuOption::SUBMIT_ASSIGNMENT:
+            submit(student);
+            break;
+        case MenuOption::VIEW_RELEASED_RESULTS:
+            viewResults(student);
+            break;
+        default:
+            break;
     }
 }
 
@@ -67,7 +74,7 @@ void StudentMenu::submit(const Student& student) {
         path = stripQuotes(io_.readText("Full path of your file: ", 1000));
         try {
             preview = submissions_.preview(student, assignmentId, path);
-        } catch (const ValidationError& e) {   // missing, empty or too big (FR-11)
+        } catch (const ValidationError& e) {  // missing, empty or too big (FR-11)
             io_.showError(e);
         }
     }
@@ -82,8 +89,8 @@ void StudentMenu::submit(const Student& student) {
         return;
     }
     if (preview->daysLate > 0) {
-        io_.info("This is late by " + std::to_string(preview->daysLate) + " day(s): " +
-                 std::to_string(10 * preview->daysLate) +
+        io_.info("This is late by " + std::to_string(preview->daysLate) +
+                 " day(s): " + std::to_string(10 * preview->daysLate) +
                  "% of the maximum mark will be deducted; zero after 3 days.");
     }
     if (preview->isResubmission) {
@@ -120,4 +127,4 @@ void StudentMenu::viewResults(const Student& student) {
     }
 }
 
-} // namespace lms
+}  // namespace lms

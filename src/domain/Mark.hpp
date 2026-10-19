@@ -53,4 +53,4 @@ struct AuditFilter {
     std::optional<int> studentId;
 };
 
-} // namespace lms
+}  // namespace lms

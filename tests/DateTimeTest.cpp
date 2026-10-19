@@ -33,3 +33,8 @@ TEST_CASE("One day apart is exactly 86400 seconds", "[unit][datetime]") {
     const auto b = fromIso8601("2026-11-08 23:59");
     CHECK(std::chrono::duration_cast<std::chrono::seconds>(b - a).count() == 86400);
 }
+
+TEST_CASE("Dates far in the future work (boundary values)", "[unit][datetime]") {
+    CHECK(toIso8601(fromIso8601("2040-03-01T12:00:00Z")) == "2040-03-01T12:00:00Z");
+    CHECK(toIso8601(fromIso8601("2099-12-31 23:59")) == "2099-12-31T23:59:00Z");
+}

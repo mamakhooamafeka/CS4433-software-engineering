@@ -31,14 +31,16 @@ void civilFromDays(long long z, int& y, unsigned& m, unsigned& d) {
     y = static_cast<int>(static_cast<long long>(yoe) + era * 400 + (m <= 2 ? 1 : 0));
 }
 
-bool isLeap(int y) { return (y % 4 == 0 && y % 100 != 0) || y % 400 == 0; }
+bool isLeap(int y) {
+    return (y % 4 == 0 && y % 100 != 0) || y % 400 == 0;
+}
 
 unsigned daysInMonth(int y, unsigned m) {
     static const unsigned days[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     return (m == 2 && isLeap(y)) ? 29 : days[m - 1];
 }
 
-} // namespace
+}  // namespace
 
 std::string toIso8601(DateTime t) {
     using namespace std::chrono;
@@ -77,8 +79,8 @@ DateTime fromIso8601(const std::string& text) {
         throw ValidationError("That date or time does not exist.");
     }
     const long long secs =
-        daysFromCivil(year, month, day) * 86400 + hour * 3600 + minute * 60 + second;
+        daysFromCivil(year, month, day) * 86400LL + hour * 3600LL + minute * 60LL + second;
     return DateTime{std::chrono::seconds{secs}};
 }
 
-} // namespace lms
+}  // namespace lms

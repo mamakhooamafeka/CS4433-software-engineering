@@ -10,4 +10,4 @@ public:
     DateTime now() const override { return std::chrono::system_clock::now(); }
 };
 
-} // namespace lms
+}  // namespace lms

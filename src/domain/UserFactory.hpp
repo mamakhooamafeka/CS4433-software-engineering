@@ -20,4 +20,4 @@ public:
                                            const std::string& passwordHash);
 };
 
-} // namespace lms
+}  // namespace lms

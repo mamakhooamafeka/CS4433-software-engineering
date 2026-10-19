@@ -25,7 +25,7 @@ struct StoredFile {
 
 class IFileStore {
 public:
-    static constexpr std::int64_t kMaxFileBytes = 10LL * 1024 * 1024;   // FR-11: 10 MB
+    static constexpr std::int64_t kMaxFileBytes = 10LL * 1024 * 1024;  // FR-11: 10 MB
 
     virtual ~IFileStore() = default;
     // Throws ValidationError if the file is missing, unreadable, empty or too large.
@@ -44,4 +44,4 @@ public:
     virtual DateTime now() const = 0;
 };
 
-} // namespace lms
+}  // namespace lms

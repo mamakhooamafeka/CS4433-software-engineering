@@ -16,4 +16,4 @@ std::string toIso8601(DateTime t);
 // Throws ValidationError if the text is not a real date and time.
 DateTime fromIso8601(const std::string& text);
 
-} // namespace lms
+}  // namespace lms

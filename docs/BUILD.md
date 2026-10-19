@@ -37,6 +37,42 @@ ctest --test-dir build --output-on-failure
 ./build/lms
 ```
 
+## First run
+
+The program keeps all its data in one folder, `lms-data` in the folder you start it from (or the folder you give it: `lms.exe D:\lms-data`):
+
+| File / folder | What it holds |
+|---|---|
+| `lms.db` | The SQLite database (created on first start from `sql/schema.sql`) |
+| `submissions/` | Every submitted file, one per version: `<assignment>/<student>/v<n>_<name>` |
+| `backups/` | One backup per day, made automatically at the first start of the day |
+| `lms-error.log` | Technical details of any error; the screen only shows a plain message |
+
+1. On the very first start there are no accounts, so the program asks you to create the **administrator**.
+2. Log in as the administrator and create the other accounts (each gets a temporary password that must be changed at first log in), then a department with its head, a course, and assign the lecturer and enrol students.
+3. Log in as the lecturer to create an assignment, as a student to submit, then lecturer (mark) and head of department (moderate, release).
+
+When the program asks for a file, you can paste a path copied with Windows *Copy as path*: the quotes are removed. Dates are typed as `YYYY-MM-DD HH:MM` and are in UTC. To quit, leave the username empty at the log-in screen.
+
+## Quality checks
+
+```bash
+ctest --test-dir build --output-on-failure      # 69 unit, integration and UI tests
+clang-format --dry-run --Werror src/*/*.cpp src/*/*.hpp app/*.cpp tests/*.cpp tests/*.hpp
+cppcheck --enable=warning,style,performance --std=c++17 --suppress=useStlAlgorithm -I src src app
+```
+
+The results of the last review are in [REVIEW.md](REVIEW.md).
+
+## Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| CMake: *Could not find SQLite3* or *Sodium* | Windows: check the `-DCMAKE_TOOLCHAIN_FILE=.../vcpkg.cmake` option. Ubuntu: install `libsqlite3-dev libsodium-dev`. |
+| *The code execution cannot proceed because sqlite3.dll was not found* | Run `lms.exe` from `build\Release`, where vcpkg copies the DLLs. |
+| Tests download Catch2 and fail offline | Install `catch2:x64-windows` with vcpkg (or `catch2` with apt), or build with `-DLMS_BUILD_TESTS=OFF`. |
+| *The database file is damaged* | Log in as administrator and restore the latest backup (menu: Backup and restore). |
+
 ## Project layout
 
 | Folder | Layer / purpose |

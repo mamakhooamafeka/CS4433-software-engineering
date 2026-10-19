@@ -26,4 +26,4 @@ private:
     std::filesystem::path root_;
 };
 
-} // namespace lms
+}  // namespace lms

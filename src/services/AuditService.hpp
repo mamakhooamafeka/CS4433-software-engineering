@@ -16,12 +16,12 @@ public:
     AuditService(IAuditRepository& audit, IClock& clock) : audit_(audit), clock_(clock) {}
 
     void recordMarkChange(int changedBy, const Submission& submission,
-                          const std::optional<Mark>& oldMark, const Mark& newMark,
-                          ChangeType type, const std::string& reason);
+                          const std::optional<Mark>& oldMark, const Mark& newMark, ChangeType type,
+                          const std::string& reason);
 
 private:
     IAuditRepository& audit_;
     IClock& clock_;
 };
 
-} // namespace lms
+}  // namespace lms

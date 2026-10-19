@@ -5,6 +5,12 @@
 #include <sstream>
 
 #ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
 #include <windows.h>
 #else
 #include <termios.h>
@@ -67,7 +73,7 @@ bool isRealConsole(const std::istream& in) {
 #endif
 }
 
-} // namespace
+}  // namespace
 
 std::string ConsoleIO::readLine(const std::string& prompt) {
     out_ << prompt << std::flush;
@@ -173,8 +179,9 @@ void ConsoleIO::showError(const LmsError& e) {
 }
 
 void ConsoleIO::heading(const std::string& title) {
-    out_ << "\n" << fit(title, kWidth) << "\n" << std::string(std::min(title.size(), kWidth), '-')
-         << "\n";
+    out_ << "\n"
+         << fit(title, kWidth) << "\n"
+         << std::string(std::min(title.size(), kWidth), '-') << "\n";
 }
 
 void ConsoleIO::line(const std::string& text) {
@@ -186,7 +193,7 @@ void ConsoleIO::info(const std::string& text) {
 }
 
 std::string showTime(DateTime t) {
-    const std::string iso = toIso8601(t);   // 2026-11-07T23:59:00Z
+    const std::string iso = toIso8601(t);  // 2026-11-07T23:59:00Z
     return iso.substr(0, 10) + " " + iso.substr(11, 5);
 }
 
@@ -202,4 +209,4 @@ std::string fit(const std::string& text, std::size_t width) {
     return text.substr(0, width - 3) + "...";
 }
 
-} // namespace lms
+}  // namespace lms

@@ -8,7 +8,7 @@ const char* const kSubmissionColumns =
     "feedback, marked_by, marked_at, moderated_by, moderated_at, released_by, released_at "
     "from submission ";
 
-} // namespace
+}  // namespace
 
 std::vector<SubmissionVersion> SqliteSubmissionRepository::versionsOf(int submissionId) {
     Statement s = db_.prepare(
@@ -40,8 +40,14 @@ std::vector<Submission> SqliteSubmissionRepository::loadAll(Statement& s) {
     // Read all rows first: versionsOf() needs its own statement on the same connection.
     std::vector<Row> rows;
     while (s.step()) {
-        Row r{s.getInt(0), s.getInt(1), s.getInt(2), statusFromString(s.getText(3)), std::nullopt,
-              s.getOptionalInt(11), s.getOptionalInt(13), s.getOptionalDateTime(12),
+        Row r{s.getInt(0),
+              s.getInt(1),
+              s.getInt(2),
+              statusFromString(s.getText(3)),
+              std::nullopt,
+              s.getOptionalInt(11),
+              s.getOptionalInt(13),
+              s.getOptionalDateTime(12),
               s.getOptionalDateTime(14)};
         if (!s.isNull(4)) {
             Mark m;
@@ -65,8 +71,8 @@ std::vector<Submission> SqliteSubmissionRepository::loadAll(Statement& s) {
 }
 
 std::optional<Submission> SqliteSubmissionRepository::find(int assignmentId, int studentId) {
-    Statement s = db_.prepare(std::string(kSubmissionColumns) +
-                              "where assignment_id = ? and student_id = ?");
+    Statement s =
+        db_.prepare(std::string(kSubmissionColumns) + "where assignment_id = ? and student_id = ?");
     s.bind(1, assignmentId).bind(2, studentId);
     auto found = loadAll(s);
     if (found.empty()) return std::nullopt;
@@ -81,8 +87,8 @@ std::optional<Submission> SqliteSubmissionRepository::findById(int id) {
     return std::move(found.front());
 }
 
-std::vector<Submission> SqliteSubmissionRepository::byAssignmentAndStatus(
-    int assignmentId, SubmissionStatus status) {
+std::vector<Submission> SqliteSubmissionRepository::byAssignmentAndStatus(int assignmentId,
+                                                                          SubmissionStatus status) {
     Statement s = db_.prepare(std::string(kSubmissionColumns) +
                               "where assignment_id = ? and status = ? order by id");
     s.bind(1, assignmentId).bind(2, toString(status));
@@ -144,4 +150,4 @@ void SqliteSubmissionRepository::save(Submission& sub) {
     }
 }
 
-} // namespace lms
+}  // namespace lms

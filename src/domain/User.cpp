@@ -49,4 +49,4 @@ UserRecord User::toRecord() const {
     return r;
 }
 
-} // namespace lms
+}  // namespace lms

@@ -20,4 +20,4 @@ void AuditService::recordMarkChange(int changedBy, const Submission& submission,
     audit_.append(e);
 }
 
-} // namespace lms
+}  // namespace lms

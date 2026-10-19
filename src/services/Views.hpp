@@ -16,8 +16,8 @@ struct AssignmentView {
     Course course;
     DateTime effectiveDeadline;
     bool hasExtension = false;
-    std::optional<SubmissionStatus> status;   // empty = not submitted yet
-    bool closed = false;                      // marks released (BR-06)
+    std::optional<SubmissionStatus> status;  // empty = not submitted yet
+    bool closed = false;                     // marks released (BR-06)
 };
 
 struct SubmissionPreview {
@@ -55,7 +55,7 @@ struct SubmissionView {
     SubmissionStatus status = SubmissionStatus::SUBMITTED;
     DateTime latestSubmittedAt;
     int versionCount = 0;
-    std::string filePath;   // latest version, so the lecturer can open it
+    std::string filePath;  // latest version, so the lecturer can open it
     int daysLate = 0;
     std::optional<Mark> mark;
 };
@@ -71,8 +71,8 @@ struct AssignmentSummary {
 
 struct ReleasePreview {
     std::string assignmentTitle;
-    int toRelease = 0;     // MODERATED now
-    int notReady = 0;      // SUBMITTED, LATE or MARKED: stay hidden
+    int toRelease = 0;  // MODERATED now
+    int notReady = 0;   // SUBMITTED, LATE or MARKED: stay hidden
 };
 
-} // namespace lms
+}  // namespace lms

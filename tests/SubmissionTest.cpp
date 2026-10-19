@@ -37,7 +37,8 @@ TEST_CASE("A submission exactly at the deadline is SUBMITTED", "[unit][submissio
     CHECK(s.getStatus() == SubmissionStatus::SUBMITTED);
 }
 
-TEST_CASE("A submission one second after the deadline is LATE, not rejected", "[unit][submission]") {
+TEST_CASE("A submission one second after the deadline is LATE, not rejected",
+          "[unit][submission]") {
     Submission s(1, 10);
     s.addVersion(versionAt(kDeadline + seconds(1)), kDeadline);
     CHECK(s.getStatus() == SubmissionStatus::LATE);
@@ -57,8 +58,7 @@ TEST_CASE("Resubmission before the deadline adds a version and keeps the old one
 TEST_CASE("Resubmission after the deadline is refused (BR-03)", "[unit][submission]") {
     Submission s(1, 10);
     s.addVersion(versionAt(kDeadline - seconds(100)), kDeadline);
-    CHECK_THROWS_AS(s.addVersion(versionAt(kDeadline + seconds(1)), kDeadline),
-                    BusinessRuleError);
+    CHECK_THROWS_AS(s.addVersion(versionAt(kDeadline + seconds(1)), kDeadline), BusinessRuleError);
 }
 
 TEST_CASE("Resubmission after marking is refused (BR-03)", "[unit][submission]") {
@@ -97,12 +97,12 @@ TEST_CASE("Amend moves MARKED to MODERATED and keeps RELEASED as RELEASED", "[un
 TEST_CASE("Events not allowed in a state are refused", "[unit][submission]") {
     Submission s(1, 10);
     s.addVersion(versionAt(kDeadline), kDeadline);
-    CHECK_THROWS_AS(s.approve(5, kDeadline), BusinessRuleError);   // not marked yet
+    CHECK_THROWS_AS(s.approve(5, kDeadline), BusinessRuleError);  // not marked yet
     CHECK_THROWS_AS(s.release(5, kDeadline), BusinessRuleError);
     s.recordMark(someMark());
     CHECK_THROWS_AS(s.recordMark(someMark()), BusinessRuleError);  // already marked
     s.approve(5, kDeadline);
-    CHECK_THROWS_AS(s.correctMark(someMark()), BusinessRuleError); // lecturer can't change now
+    CHECK_THROWS_AS(s.correctMark(someMark()), BusinessRuleError);  // lecturer can't change now
 }
 
 TEST_CASE("An extension turns LATE back into SUBMITTED (DC-01)", "[unit][submission]") {
@@ -110,7 +110,7 @@ TEST_CASE("An extension turns LATE back into SUBMITTED (DC-01)", "[unit][submiss
     const DateTime submittedAt = kDeadline + std::chrono::hours(5);
     s.addVersion(versionAt(submittedAt), kDeadline);
     REQUIRE(s.getStatus() == SubmissionStatus::LATE);
-    s.reevaluateLateness(kDeadline + std::chrono::hours(1));   // still too early
+    s.reevaluateLateness(kDeadline + std::chrono::hours(1));  // still too early
     CHECK(s.getStatus() == SubmissionStatus::LATE);
     s.reevaluateLateness(kDeadline + std::chrono::hours(24));
     CHECK(s.getStatus() == SubmissionStatus::SUBMITTED);

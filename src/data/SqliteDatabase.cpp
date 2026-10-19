@@ -8,9 +8,8 @@
 namespace lms {
 
 void throwSqliteError(sqlite3* db, int rc, const std::string& context) {
-    const std::string detail =
-        context + ": " + (db ? sqlite3_errmsg(db) : sqlite3_errstr(rc)) + " (code " +
-        std::to_string(rc) + ")";
+    const std::string detail = context + ": " + (db ? sqlite3_errmsg(db) : sqlite3_errstr(rc)) +
+                               " (code " + std::to_string(rc) + ")";
     ErrorLog::write(detail);
     if ((rc & 0xff) == SQLITE_CONSTRAINT) {
         throw ConstraintViolation("The data breaks a rule of the system.");
@@ -42,7 +41,7 @@ namespace {
 void check(sqlite3* db, int rc) {
     if (rc != SQLITE_OK) throwSqliteError(db, rc, "bind");
 }
-} // namespace
+}  // namespace
 
 Statement& Statement::bind(int index, int value) {
     check(db_, sqlite3_bind_int(stmt_, index, value));
@@ -147,7 +146,7 @@ SqliteDatabase::SqliteDatabase(const std::string& path) {
     }
     sqlite3_busy_timeout(handle_, 2000);
     exec("pragma foreign_keys = on;");
-    exec("pragma synchronous = full;");   // NFR-05: survive a power loss during a write
+    exec("pragma synchronous = full;");  // NFR-05: survive a power loss during a write
     createSchemaIfNew();
 }
 
@@ -241,4 +240,4 @@ void SqliteDatabase::rollback() {
     exec("rollback;");
 }
 
-} // namespace lms
+}  // namespace lms

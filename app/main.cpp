@@ -60,8 +60,8 @@ int run(const fs::path& dataDir) {
     AssignmentService assignmentSvc(assignments, courses, submissions, users, clock, db);
     SubmissionService submissionSvc(assignments, courses, submissions, files, clock, db);
     MarkingService marking(assignments, courses, submissions, users, policy, audit, clock, db);
-    ModerationService moderation(assignments, courses, submissions, users, auditLog, policy,
-                                 audit, clock, db);
+    ModerationService moderation(assignments, courses, submissions, users, auditLog, policy, audit,
+                                 clock, db);
     BackupService backup(db, files, clock, (dataDir / "backups").string());
 
     ConsoleIO io;
@@ -69,7 +69,7 @@ int run(const fs::path& dataDir) {
     try {
         if (backup.backupIfFirstStartToday()) io.info("Today's backup has been made.");
     } catch (const LmsError& e) {
-        io.showError(e);   // a failed backup must not stop people working
+        io.showError(e);  // a failed backup must not stop people working
     }
     if (admin.needsFirstAdmin()) createFirstAdmin(io, admin);
 
@@ -82,10 +82,18 @@ int run(const fs::path& dataDir) {
     while (std::unique_ptr<User> user = login.run()) {
         MenuScreen* menu = &adminMenu;
         switch (user->role()) {
-            case Role::STUDENT: menu = &studentMenu; break;
-            case Role::LECTURER: menu = &lecturerMenu; break;
-            case Role::HOD: menu = &hodMenu; break;
-            case Role::ADMIN: menu = &adminMenu; break;
+            case Role::STUDENT:
+                menu = &studentMenu;
+                break;
+            case Role::LECTURER:
+                menu = &lecturerMenu;
+                break;
+            case Role::HOD:
+                menu = &hodMenu;
+                break;
+            case Role::ADMIN:
+                menu = &adminMenu;
+                break;
         }
         menu->run(*user);
         io.info("You have logged out.");
@@ -94,14 +102,14 @@ int run(const fs::path& dataDir) {
     return 0;
 }
 
-} // namespace
+}  // namespace
 
 int main(int argc, char* argv[]) {
     const fs::path dataDir = argc > 1 ? fs::path(argv[1]) : fs::path("lms-data");
     try {
         return run(dataDir);
     } catch (const InputClosed&) {
-        return 0;   // Ctrl+Z / Ctrl+D: leave quietly
+        return 0;  // Ctrl+Z / Ctrl+D: leave quietly
     } catch (const LmsError& e) {
         std::cerr << "\n" << e.what() << "\n";
         return 1;

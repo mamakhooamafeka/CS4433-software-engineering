@@ -7,3 +7,13 @@ A console Learning Management System for a secondary school: assignments, submis
 
 **Build and run:** see [docs/BUILD.md](docs/BUILD.md).
 **Coding standard:** see [docs/CODING_STANDARD.md](docs/CODING_STANDARD.md).
+**Code review and requirement traceability:** see [docs/REVIEW.md](docs/REVIEW.md).
+
+## Quick start (Ubuntu)
+
+```bash
+cmake -S . -B build && cmake --build build -j && ctest --test-dir build
+./build/lms            # first start asks you to create the administrator
+```
+
+On Windows follow the Visual Studio + vcpkg steps in the build guide.

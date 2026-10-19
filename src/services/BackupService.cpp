@@ -19,7 +19,7 @@ std::string folderNameFor(DateTime t) {
     return s;
 }
 
-} // namespace
+}  // namespace
 
 bool BackupService::backupIfFirstStartToday() {
     const std::string today = toIso8601(clock_.now()).substr(0, 10);
@@ -53,7 +53,7 @@ std::vector<std::string> BackupService::listBackups(const User& admin) {
             if (entry.is_directory()) names.push_back(entry.path().filename().string());
         }
     }
-    std::sort(names.rbegin(), names.rend());   // newest first
+    std::sort(names.rbegin(), names.rend());  // newest first
     return names;
 }
 
@@ -68,4 +68,4 @@ void BackupService::restore(const User& admin, const std::string& backupName) {
     files_.restoreFrom((folder / "submissions").string());
 }
 
-} // namespace lms
+}  // namespace lms

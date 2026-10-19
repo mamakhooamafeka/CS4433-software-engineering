@@ -6,20 +6,31 @@ namespace lms {
 namespace {
 
 std::string describe(const UserRecord& u) {
-    return std::to_string(u.id) + " " + u.username + " | " + u.fullName + " | " +
-           toString(u.role) + (u.active ? "" : " | deactivated");
+    return std::to_string(u.id) + " " + u.username + " | " + u.fullName + " | " + toString(u.role) +
+           (u.active ? "" : " | deactivated");
 }
 
-} // namespace
+}  // namespace
 
 void AdminMenu::handle(User& user, MenuOption option) {
     switch (option) {
-        case MenuOption::MANAGE_ACCOUNTS: manageAccounts(user); break;
-        case MenuOption::RESET_PASSWORD: resetPassword(user); break;
-        case MenuOption::MANAGE_DEPARTMENTS_AND_COURSES: manageDepartmentsAndCourses(user); break;
-        case MenuOption::ASSIGN_LECTURERS_AND_ENROL: assignLecturersAndEnrol(user); break;
-        case MenuOption::BACKUP_AND_RESTORE: backupAndRestore(user); break;
-        default: break;
+        case MenuOption::MANAGE_ACCOUNTS:
+            manageAccounts(user);
+            break;
+        case MenuOption::RESET_PASSWORD:
+            resetPassword(user);
+            break;
+        case MenuOption::MANAGE_DEPARTMENTS_AND_COURSES:
+            manageDepartmentsAndCourses(user);
+            break;
+        case MenuOption::ASSIGN_LECTURERS_AND_ENROL:
+            assignLecturersAndEnrol(user);
+            break;
+        case MenuOption::BACKUP_AND_RESTORE:
+            backupAndRestore(user);
+            break;
+        default:
+            break;
     }
 }
 
@@ -62,8 +73,8 @@ void AdminMenu::manageAccounts(const User& admin) {
         for (const UserRecord& u : admin_.listUsers(admin)) io_.info(describe(u));
     } else if (what == 1) {
         const std::vector<Role> roles = {Role::STUDENT, Role::LECTURER, Role::HOD, Role::ADMIN};
-        const int r = io_.choose("Role", {"Student", "Lecturer", "Head of department",
-                                          "Administrator"});
+        const int r =
+            io_.choose("Role", {"Student", "Lecturer", "Head of department", "Administrator"});
         if (r < 0) return;
         const std::string username = io_.readText("Username: ", 32);
         const std::string fullName = io_.readText("Full name: ", 100);
@@ -129,9 +140,9 @@ void AdminMenu::manageDepartmentsAndCourses(const User& admin) {
 
 // UC07 (FR-07).
 void AdminMenu::assignLecturersAndEnrol(const User& admin) {
-    const int what = io_.choose("Lecturers and enrolment",
-                                {"Assign a lecturer to a course", "Enrol a student",
-                                 "Withdraw a student"});
+    const int what =
+        io_.choose("Lecturers and enrolment",
+                   {"Assign a lecturer to a course", "Enrol a student", "Withdraw a student"});
     if (what < 0) return;
     const auto course = pickCourse(admin);
     if (!course) return;
@@ -167,4 +178,4 @@ void AdminMenu::backupAndRestore(const User& admin) {
     }
 }
 
-} // namespace lms
+}  // namespace lms

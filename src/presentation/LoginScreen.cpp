@@ -25,4 +25,4 @@ std::unique_ptr<User> LoginScreen::run() {
     }
 }
 
-} // namespace lms
+}  // namespace lms

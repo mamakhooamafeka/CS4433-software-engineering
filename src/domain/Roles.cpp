@@ -51,4 +51,4 @@ std::vector<MenuOption> Administrator::menuOptions() const {
             MenuOption::LOG_OUT};
 }
 
-} // namespace lms
+}  // namespace lms

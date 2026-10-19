@@ -33,8 +33,8 @@ struct UserRecord {
 
 class User {
 public:
-    static constexpr int kMaxFailedAttempts = 5;   // FR-02
-    static constexpr int kLockMinutes = 15;        // FR-02
+    static constexpr int kMaxFailedAttempts = 5;  // FR-02
+    static constexpr int kLockMinutes = 15;       // FR-02
 
     explicit User(UserRecord record);
     virtual ~User() = default;
@@ -75,4 +75,4 @@ protected:
     bool mustChangePassword_;
 };
 
-} // namespace lms
+}  // namespace lms

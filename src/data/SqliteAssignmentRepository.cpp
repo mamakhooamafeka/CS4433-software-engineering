@@ -12,7 +12,7 @@ Assignment readAssignment(const Statement& s) {
                       s.getInt(5), s.getInt(6), s.getDateTime(7));
 }
 
-} // namespace
+}  // namespace
 
 std::optional<Assignment> SqliteAssignmentRepository::findById(int id) {
     Statement s = db_.prepare(std::string(kAssignmentColumns) + "where id = ?");
@@ -22,8 +22,8 @@ std::optional<Assignment> SqliteAssignmentRepository::findById(int id) {
 }
 
 std::vector<Assignment> SqliteAssignmentRepository::byCourse(int courseId) {
-    Statement s = db_.prepare(std::string(kAssignmentColumns) +
-                              "where course_id = ? order by deadline");
+    Statement s =
+        db_.prepare(std::string(kAssignmentColumns) + "where course_id = ? order by deadline");
     s.bind(1, courseId);
     std::vector<Assignment> out;
     while (s.step()) out.push_back(readAssignment(s));
@@ -70,4 +70,4 @@ void SqliteAssignmentRepository::insertExtension(const Extension& e) {
     s.run();
 }
 
-} // namespace lms
+}  // namespace lms

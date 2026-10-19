@@ -21,4 +21,4 @@ PenaltyResult TenPercentPerDayPolicy::apply(double rawMark, int maxMark, int day
     return PenaltyResult{roundToTenth(raw - finalMark), finalMark};
 }
 
-} // namespace lms
+}  // namespace lms

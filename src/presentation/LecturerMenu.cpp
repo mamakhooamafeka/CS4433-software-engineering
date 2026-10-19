@@ -13,16 +13,25 @@ std::string describe(const SubmissionView& v) {
     return text;
 }
 
-} // namespace
+}  // namespace
 
 void LecturerMenu::handle(User& user, MenuOption option) {
     const auto& lecturer = dynamic_cast<const Lecturer&>(user);
     switch (option) {
-        case MenuOption::CREATE_ASSIGNMENT: createAssignment(lecturer); break;
-        case MenuOption::GRANT_EXTENSION: grantExtension(lecturer); break;
-        case MenuOption::MARK_SUBMISSIONS: markSubmissions(lecturer); break;
-        case MenuOption::CORRECT_MARK: correctMark(lecturer); break;
-        default: break;
+        case MenuOption::CREATE_ASSIGNMENT:
+            createAssignment(lecturer);
+            break;
+        case MenuOption::GRANT_EXTENSION:
+            grantExtension(lecturer);
+            break;
+        case MenuOption::MARK_SUBMISSIONS:
+            markSubmissions(lecturer);
+            break;
+        case MenuOption::CORRECT_MARK:
+            correctMark(lecturer);
+            break;
+        default:
+            break;
     }
 }
 
@@ -106,12 +115,12 @@ void LecturerMenu::markSubmissions(const Lecturer& lecturer) {
         if (pick < 0) return;
         const SubmissionView& v = list[static_cast<std::size_t>(pick)];
         io_.info("File: " + v.filePath);
-        const double raw = io_.readMark(
-            "Raw mark (0-" + std::to_string(a->getMaxMark()) + "): ", a->getMaxMark());
+        const double raw =
+            io_.readMark("Raw mark (0-" + std::to_string(a->getMaxMark()) + "): ", a->getMaxMark());
         const std::string feedback = io_.readText("Feedback: ", 2000, true);
         const Mark m = marking_.mark(lecturer, v.submissionId, raw, feedback);
-        io_.info("Saved. Raw " + showMark(m.rawMark) + ", late deduction " +
-                 showMark(m.deduction) + ", final " + showMark(m.finalMark) + ".");
+        io_.info("Saved. Raw " + showMark(m.rawMark) + ", late deduction " + showMark(m.deduction) +
+                 ", final " + showMark(m.finalMark) + ".");
     }
 }
 
@@ -121,23 +130,24 @@ void LecturerMenu::correctMark(const Lecturer& lecturer) {
     if (!a) return;
     std::vector<SubmissionView> marked;
     for (const SubmissionView& v : marking_.listSubmissions(lecturer, a->getId(), false)) {
-        if (v.status == SubmissionStatus::MARKED) marked.push_back(v);
+        if (v.status == SubmissionStatus::MARKED && v.mark) marked.push_back(v);
     }
     std::vector<std::string> items;
     for (const SubmissionView& v : marked) items.push_back(describe(v));
     const int pick = io_.choose("Marked submissions (not yet moderated)", items);
     if (pick < 0) return;
     const SubmissionView& v = marked[static_cast<std::size_t>(pick)];
-    io_.info("Current: raw " + showMark(v.mark->rawMark) + ", final " +
-             showMark(v.mark->finalMark) + ". Feedback: " + v.mark->feedback);
+    const Mark old = v.mark.value_or(Mark{});
+    io_.info("Current: raw " + showMark(old.rawMark) + ", final " + showMark(old.finalMark) +
+             ". Feedback: " + old.feedback);
     const double raw = io_.readMark(
         "Corrected raw mark (0-" + std::to_string(a->getMaxMark()) + "): ", a->getMaxMark());
     std::string feedback = io_.readText("New feedback (Enter keeps the old): ", 2000, true);
-    if (feedback.empty()) feedback = v.mark->feedback;
+    if (feedback.empty()) feedback = old.feedback;
     const std::string reason = io_.readText("Reason for the correction: ", 500);
     if (!io_.confirm("Save the corrected mark?")) return;
     const Mark m = marking_.correct(lecturer, v.submissionId, raw, feedback, reason);
     io_.info("Corrected. Final mark is now " + showMark(m.finalMark) + ".");
 }
 
-} // namespace lms
+}  // namespace lms

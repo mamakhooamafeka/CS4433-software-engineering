@@ -9,11 +9,11 @@ namespace lms {
 
 class Assignment {
 public:
-    static constexpr int kMinMaxMark = 1;      // FR-08
-    static constexpr int kMaxMaxMark = 1000;   // FR-08
+    static constexpr int kMinMaxMark = 1;     // FR-08
+    static constexpr int kMaxMaxMark = 1000;  // FR-08
 
-    Assignment(int id, int courseId, std::string title, std::string instructions,
-               DateTime deadline, int maxMark, int createdBy, DateTime createdAt)
+    Assignment(int id, int courseId, std::string title, std::string instructions, DateTime deadline,
+               int maxMark, int createdBy, DateTime createdAt)
         : id_(id),
           courseId_(courseId),
           title_(std::move(title)),
@@ -55,4 +55,4 @@ struct Extension {
     DateTime grantedAt;
 };
 
-} // namespace lms
+}  // namespace lms

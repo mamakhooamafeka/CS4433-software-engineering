@@ -23,8 +23,8 @@ MarkingService::Context MarkingService::load(const User& user, int submissionId)
 }
 
 // BR-01 applied to the latest version and the deadline in force now (BR-02).
-Mark MarkingService::computeMark(const Context& ctx, double rawMark,
-                                 const std::string& feedback, int markedBy) {
+Mark MarkingService::computeMark(const Context& ctx, double rawMark, const std::string& feedback,
+                                 int markedBy) {
     requireRawMark(rawMark, ctx.assignment.getMaxMark());
     const DateTime deadline =
         deadlines_.effectiveDeadline(ctx.assignment, ctx.submission.getStudentId());
@@ -80,8 +80,8 @@ Mark MarkingService::mark(const Lecturer& lecturer, int submissionId, double raw
     Transaction tx(tx_);
     ctx.submission.recordMark(m);
     submissions_.save(ctx.submission);
-    audit_.recordMarkChange(lecturer.getId(), ctx.submission, std::nullopt, m,
-                            ChangeType::INITIAL, "Initial mark");
+    audit_.recordMarkChange(lecturer.getId(), ctx.submission, std::nullopt, m, ChangeType::INITIAL,
+                            "Initial mark");
     tx.commit();
     return m;
 }
@@ -93,7 +93,7 @@ Mark MarkingService::correct(const Lecturer& lecturer, int submissionId, double 
     const auto oldMark = ctx.submission.getMark();
     const Mark m = computeMark(ctx, rawMark, feedback, lecturer.getId());
     Transaction tx(tx_);
-    ctx.submission.correctMark(m);   // only while MARKED (BR-07)
+    ctx.submission.correctMark(m);  // only while MARKED (BR-07)
     submissions_.save(ctx.submission);
     audit_.recordMarkChange(lecturer.getId(), ctx.submission, oldMark, m, ChangeType::CORRECTION,
                             why);
@@ -101,4 +101,4 @@ Mark MarkingService::correct(const Lecturer& lecturer, int submissionId, double 
     return m;
 }
 
-} // namespace lms
+}  // namespace lms

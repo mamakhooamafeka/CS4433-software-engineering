@@ -41,8 +41,7 @@ public:
 TEST_CASE("UserFactory builds the right subclass for each role", "[unit][user]") {
     CHECK(dynamic_cast<Student*>(UserFactory::create(record(Role::STUDENT)).get()) != nullptr);
     CHECK(dynamic_cast<Lecturer*>(UserFactory::create(record(Role::LECTURER)).get()) != nullptr);
-    CHECK(dynamic_cast<HeadOfDepartment*>(UserFactory::create(record(Role::HOD)).get()) !=
-          nullptr);
+    CHECK(dynamic_cast<HeadOfDepartment*>(UserFactory::create(record(Role::HOD)).get()) != nullptr);
     CHECK(dynamic_cast<Administrator*>(UserFactory::create(record(Role::ADMIN)).get()) != nullptr);
 }
 

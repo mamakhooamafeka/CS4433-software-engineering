@@ -58,14 +58,15 @@ TEST_CASE("Wrong roles and bad input are refused with clear errors", "[integrati
     const int dept = w.admin.createDepartment(*admin, "Sciences", 0);
     const int course = w.admin.createCourse(*admin, "PHY101", "Physics", dept);
 
-    CHECK_THROWS_AS(w.admin.assignLecturer(*admin, course, stu), ValidationError);   // not a lecturer
+    CHECK_THROWS_AS(w.admin.assignLecturer(*admin, course, stu),
+                    ValidationError);  // not a lecturer
     CHECK_THROWS_AS(w.admin.assignHeadOfDepartment(*admin, dept, stu), ValidationError);
     CHECK_THROWS_AS(w.admin.createCourse(*admin, "X1", "X", 999), ValidationError);  // no such dept
     CHECK_THROWS_AS(w.admin.createUser(*admin, Role::STUDENT, "a b", "Name", "password1"),
-                    ValidationError);                                            // space in username
+                    ValidationError);  // space in username
     CHECK_THROWS_AS(w.admin.createUser(*admin, Role::STUDENT, "ok_name", "", "password1"),
-                    ValidationError);                                            // empty name
-    CHECK_THROWS_AS(w.admin.deactivateUser(*admin, adminId), BusinessRuleError); // self
+                    ValidationError);                                             // empty name
+    CHECK_THROWS_AS(w.admin.deactivateUser(*admin, adminId), BusinessRuleError);  // self
 }
 
 TEST_CASE("One HoD cannot head two departments (ASM-04)", "[integration][admin]") {

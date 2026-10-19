@@ -93,4 +93,4 @@ private:
     BackupService& backup_;
 };
 
-} // namespace lms
+}  // namespace lms

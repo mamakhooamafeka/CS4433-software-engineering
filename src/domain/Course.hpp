@@ -39,4 +39,4 @@ private:
     int departmentId_;
 };
 
-} // namespace lms
+}  // namespace lms

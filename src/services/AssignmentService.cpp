@@ -11,9 +11,8 @@ Course AssignmentService::requireCourse(int courseId) {
 }
 
 int AssignmentService::createAssignment(const Lecturer& lecturer, int courseId,
-                                        const std::string& title,
-                                        const std::string& instructions, DateTime deadline,
-                                        int maxMark) {
+                                        const std::string& title, const std::string& instructions,
+                                        DateTime deadline, int maxMark) {
     requireCourseAccess(lecturer, requireCourse(courseId));
     const std::string t = requireText(title, "The title", 1, 200);
     const std::string i = requireText(instructions, "The instructions", 1, 5000);
@@ -36,7 +35,7 @@ void AssignmentService::grantExtension(const Lecturer& lecturer, int assignmentI
     if (!courses_.isEnrolled(assignment->getCourseId(), studentId)) {
         throw ValidationError("That student is not enrolled in this course.");
     }
-    const std::string why = requireText(reason, "The reason", 1, 500);   // C3: mandatory
+    const std::string why = requireText(reason, "The reason", 1, 500);  // C3: mandatory
     if (newDeadline <= deadlines_.effectiveDeadline(*assignment, studentId)) {
         throw BusinessRuleError("An extension can only move the deadline later (BR-02).");
     }
@@ -57,7 +56,7 @@ void AssignmentService::grantExtension(const Lecturer& lecturer, int assignmentI
     Transaction tx(tx_);
     assignments_.insertExtension(e);
     if (submission) {
-        submission->reevaluateLateness(newDeadline);   // DC-01
+        submission->reevaluateLateness(newDeadline);  // DC-01
         submissions_.save(*submission);
     }
     tx.commit();
@@ -67,8 +66,12 @@ std::vector<AssignmentView> AssignmentService::listForStudent(const Student& stu
     std::vector<AssignmentView> out;
     for (const Course& c : courses_.coursesOfStudent(student.getId())) {
         for (const Assignment& a : assignments_.byCourse(c.getId())) {
-            AssignmentView v{a, c, deadlines_.effectiveDeadline(a, student.getId()), false,
-                             std::nullopt, submissions_.hasReleased(a.getId())};
+            AssignmentView v{a,
+                             c,
+                             deadlines_.effectiveDeadline(a, student.getId()),
+                             false,
+                             std::nullopt,
+                             submissions_.hasReleased(a.getId())};
             v.hasExtension = v.effectiveDeadline != a.getDeadline();
             if (auto s = submissions_.find(a.getId(), student.getId())) {
                 v.status = s->getStatus();
@@ -93,4 +96,4 @@ std::vector<UserRecord> AssignmentService::studentsOf(const Lecturer& lecturer, 
     return users_.studentsOfCourse(courseId);
 }
 
-} // namespace lms
+}  // namespace lms

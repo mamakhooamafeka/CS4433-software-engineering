@@ -20,4 +20,4 @@ private:
     IAssignmentRepository& assignments_;
 };
 
-} // namespace lms
+}  // namespace lms

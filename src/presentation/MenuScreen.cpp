@@ -9,7 +9,7 @@ void MenuScreen::run(User& user) {
     while (true) {
         const std::vector<MenuOption> options = user.menuOptions();
         io_.heading("Main menu: " + user.getFullName() + " (" + toString(user.role()) + ")");
-        const int pending = auth_.pendingWorkCount(user);   // FR-23
+        const int pending = auth_.pendingWorkCount(user);  // FR-23
         if (pending > 0) {
             const char* what = user.role() == Role::STUDENT ? " assignment(s) to submit"
                                : user.role() == Role::HOD   ? " submission(s) to moderate"
@@ -66,4 +66,4 @@ bool askNewPassword(ConsoleIO& io, AuthService& auth, User& user,
     return false;
 }
 
-} // namespace lms
+}  // namespace lms

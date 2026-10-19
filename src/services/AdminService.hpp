@@ -48,4 +48,4 @@ private:
     IClock& clock_;
 };
 
-} // namespace lms
+}  // namespace lms

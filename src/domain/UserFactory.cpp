@@ -7,10 +7,14 @@ namespace lms {
 
 std::unique_ptr<User> UserFactory::create(const UserRecord& rec) {
     switch (rec.role) {
-        case Role::STUDENT: return std::make_unique<Student>(rec, rec.courseIds);
-        case Role::LECTURER: return std::make_unique<Lecturer>(rec, rec.courseIds);
-        case Role::HOD: return std::make_unique<HeadOfDepartment>(rec, rec.departmentId);
-        case Role::ADMIN: return std::make_unique<Administrator>(rec);
+        case Role::STUDENT:
+            return std::make_unique<Student>(rec, rec.courseIds);
+        case Role::LECTURER:
+            return std::make_unique<Lecturer>(rec, rec.courseIds);
+        case Role::HOD:
+            return std::make_unique<HeadOfDepartment>(rec, rec.departmentId);
+        case Role::ADMIN:
+            return std::make_unique<Administrator>(rec);
     }
     throw DataAccessError("The database contains an unknown role.");
 }
@@ -28,4 +32,4 @@ std::unique_ptr<User> UserFactory::createNew(Role role, const std::string& usern
     return create(rec);
 }
 
-} // namespace lms
+}  // namespace lms

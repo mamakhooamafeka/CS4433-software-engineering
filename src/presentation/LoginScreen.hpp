@@ -21,4 +21,4 @@ private:
     AuthService& auth_;
 };
 
-} // namespace lms
+}  // namespace lms

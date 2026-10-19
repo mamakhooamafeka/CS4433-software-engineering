@@ -17,17 +17,16 @@ namespace fs = std::filesystem;
 using std::chrono::hours;
 
 struct Flow : test::World {
-    fs::path dir = fs::temp_directory_path() /
-                   ("lms_test_" + std::to_string(std::chrono::steady_clock::now()
-                                                     .time_since_epoch()
-                                                     .count()));
+    fs::path dir =
+        fs::temp_directory_path() /
+        ("lms_test_" + std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
     LocalFileStore files{dir / "store"};
     TenPercentPerDayPolicy policy;
     AuditService auditService{audit, clock};
     AssignmentService assignmentsSvc{assignments, courses, submissions, users, clock, db};
     SubmissionService submit{assignments, courses, submissions, files, clock, db};
-    MarkingService marking{assignments, courses, submissions, users,
-                           policy,      auditService, clock, db};
+    MarkingService marking{assignments, courses,      submissions, users,
+                           policy,      auditService, clock,       db};
     int lecId, stuId, otherStuId, courseId, asgId;
     DateTime deadline;
 
@@ -63,6 +62,5 @@ struct Flow : test::World {
     }
     std::unique_ptr<User> lecHolder, stuHolder;
 };
-
 
 }  // namespace lms::test

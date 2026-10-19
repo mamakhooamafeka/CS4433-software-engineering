@@ -52,4 +52,4 @@ std::vector<AuditEntry> SqliteAuditRepository::query(const AuditFilter& f) {
     return out;
 }
 
-} // namespace lms
+}  // namespace lms

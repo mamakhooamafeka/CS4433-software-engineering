@@ -31,4 +31,4 @@ bool SodiumPasswordHasher::verify(const std::string& password, const std::string
     return crypto_pwhash_str_verify(storedHash.c_str(), password.c_str(), password.size()) == 0;
 }
 
-} // namespace lms
+}  // namespace lms

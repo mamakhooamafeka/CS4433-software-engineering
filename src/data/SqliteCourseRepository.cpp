@@ -95,8 +95,8 @@ int SqliteCourseRepository::insertCourse(const std::string& code, const std::str
 }
 
 void SqliteCourseRepository::addLecturer(int courseId, int lecturerId) {
-    Statement s = db_.prepare(
-        "insert or ignore into course_lecturer (course_id, lecturer_id) values (?, ?)");
+    Statement s =
+        db_.prepare("insert or ignore into course_lecturer (course_id, lecturer_id) values (?, ?)");
     s.bind(1, courseId).bind(2, lecturerId);
     s.run();
 }
@@ -112,8 +112,8 @@ void SqliteCourseRepository::enrol(int courseId, int studentId, DateTime at) {
 
 // Withdrawal keeps the row, so the student's past submissions stay linked (FR-04).
 void SqliteCourseRepository::withdraw(int courseId, int studentId) {
-    Statement s = db_.prepare(
-        "update enrolment set withdrawn = 1 where course_id = ? and student_id = ?");
+    Statement s =
+        db_.prepare("update enrolment set withdrawn = 1 where course_id = ? and student_id = ?");
     s.bind(1, courseId).bind(2, studentId);
     s.run();
 }
@@ -125,4 +125,4 @@ bool SqliteCourseRepository::isEnrolled(int courseId, int studentId) {
     return s.step();
 }
 
-} // namespace lms
+}  // namespace lms

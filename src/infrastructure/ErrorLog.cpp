@@ -19,7 +19,7 @@ std::mutex& logMutex() {
     return m;
 }
 
-} // namespace
+}  // namespace
 
 void ErrorLog::setPath(const std::string& path) {
     std::lock_guard<std::mutex> lock(logMutex());
@@ -34,4 +34,4 @@ void ErrorLog::write(const std::string& detail) {
     }
 }
 
-} // namespace lms
+}  // namespace lms

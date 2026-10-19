@@ -28,12 +28,12 @@ public:
     void addVersion(SubmissionVersion v, DateTime effectiveDeadline);
     bool canResubmit(DateTime now, DateTime effectiveDeadline) const;
 
-    void recordMark(const Mark& m);                         // SUBMITTED/LATE -> MARKED
-    void correctMark(const Mark& m);                        // MARKED -> MARKED
-    void approve(int hodId, DateTime at);                   // MARKED -> MODERATED
-    void amend(const Mark& m, int hodId, DateTime at);      // MARKED -> MODERATED, RELEASED -> RELEASED
-    void release(int hodId, DateTime at);                   // MODERATED -> RELEASED
-    void reevaluateLateness(DateTime effectiveDeadline);    // LATE -> SUBMITTED (DC-01)
+    void recordMark(const Mark& m);                     // SUBMITTED/LATE -> MARKED
+    void correctMark(const Mark& m);                    // MARKED -> MARKED
+    void approve(int hodId, DateTime at);               // MARKED -> MODERATED
+    void amend(const Mark& m, int hodId, DateTime at);  // MARKED -> MODERATED, RELEASED -> RELEASED
+    void release(int hodId, DateTime at);               // MODERATED -> RELEASED
+    void reevaluateLateness(DateTime effectiveDeadline);  // LATE -> SUBMITTED (DC-01)
 
     const SubmissionVersion& latestVersion() const;
     SubmissionStatus getStatus() const { return status_; }
@@ -64,4 +64,4 @@ private:
     std::optional<DateTime> releasedAt_;
 };
 
-} // namespace lms
+}  // namespace lms

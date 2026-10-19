@@ -52,7 +52,7 @@ TEST_CASE("A deactivated user cannot log in (FR-04)", "[integration][auth]") {
     const int stu = w.addUser(Role::STUDENT, "stu1", "secret123");
     w.admin.deactivateUser(*w.user(adminId), stu);
     CHECK_THROWS_AS(w.auth.login("stu1", "secret123"), AccessDeniedError);
-    CHECK(w.user(stu) != nullptr);   // the record is kept
+    CHECK(w.user(stu) != nullptr);  // the record is kept
 }
 
 TEST_CASE("Changing a password needs the current one and 8+ characters (FR-03)",

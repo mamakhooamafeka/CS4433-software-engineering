@@ -38,4 +38,4 @@ bool askNewPassword(ConsoleIO& io, AuthService& auth, User& user,
 // Asks for a password twice until both match and it has 8+ characters (FR-03).
 std::string readNewPassword(ConsoleIO& io, const std::string& what);
 
-} // namespace lms
+}  // namespace lms

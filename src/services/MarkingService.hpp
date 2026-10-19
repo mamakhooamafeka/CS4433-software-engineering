@@ -43,8 +43,7 @@ private:
         Assignment assignment;
     };
     Context load(const User& user, int submissionId);
-    Mark computeMark(const Context& ctx, double rawMark, const std::string& feedback,
-                     int markedBy);
+    Mark computeMark(const Context& ctx, double rawMark, const std::string& feedback, int markedBy);
 
     IAssignmentRepository& assignments_;
     ICourseRepository& courses_;
@@ -60,4 +59,4 @@ private:
 // Shared by MarkingService and ModerationService: checks 0 <= raw <= max (FR-13).
 void requireRawMark(double rawMark, int maxMark);
 
-} // namespace lms
+}  // namespace lms

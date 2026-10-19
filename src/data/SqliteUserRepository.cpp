@@ -23,13 +23,13 @@ UserRecord readRecord(const Statement& s) {
     return r;
 }
 
-} // namespace
+}  // namespace
 
 // Adds the courses or department that limit what this user may see (BR-07).
 void SqliteUserRepository::loadScope(UserRecord& rec) {
     if (rec.role == Role::STUDENT) {
-        Statement s = db_.prepare(
-            "select course_id from enrolment where student_id = ? and withdrawn = 0");
+        Statement s =
+            db_.prepare("select course_id from enrolment where student_id = ? and withdrawn = 0");
         s.bind(1, rec.id);
         while (s.step()) rec.courseIds.insert(s.getInt(0));
     } else if (rec.role == Role::LECTURER) {
@@ -107,4 +107,4 @@ std::vector<UserRecord> SqliteUserRepository::studentsOfCourse(int courseId) {
     return out;
 }
 
-} // namespace lms
+}  // namespace lms

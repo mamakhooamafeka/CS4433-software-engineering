@@ -4,8 +4,8 @@
 
 namespace lms {
 
-std::string requireText(const std::string& value, const std::string& fieldName,
-                        std::size_t minLen, std::size_t maxLen) {
+std::string requireText(const std::string& value, const std::string& fieldName, std::size_t minLen,
+                        std::size_t maxLen) {
     const auto first = value.find_first_not_of(" \t\r\n");
     const auto last = value.find_last_not_of(" \t\r\n");
     const std::string trimmed =
@@ -55,4 +55,4 @@ void requireCourseAccess(const User& user, const Course& course) {
     }
 }
 
-} // namespace lms
+}  // namespace lms

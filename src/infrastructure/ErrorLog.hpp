@@ -12,4 +12,4 @@ public:
     static void write(const std::string& detail);
 };
 
-} // namespace lms
+}  // namespace lms

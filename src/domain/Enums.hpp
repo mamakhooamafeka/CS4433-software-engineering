@@ -21,4 +21,4 @@ Role roleFromString(const std::string& text);
 SubmissionStatus statusFromString(const std::string& text);
 ChangeType changeTypeFromString(const std::string& text);
 
-} // namespace lms
+}  // namespace lms

@@ -56,4 +56,4 @@ public:
     bool canAccessCourse(const Course&) const override { return false; }
 };
 
-} // namespace lms
+}  // namespace lms

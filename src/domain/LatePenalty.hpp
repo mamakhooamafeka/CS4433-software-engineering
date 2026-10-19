@@ -30,4 +30,4 @@ private:
 // Rounds to one decimal place (BR-01).
 double roundToTenth(double value);
 
-} // namespace lms
+}  // namespace lms

@@ -50,4 +50,4 @@ private:
     DeadlineCalculator deadlines_;
 };
 
-} // namespace lms
+}  // namespace lms

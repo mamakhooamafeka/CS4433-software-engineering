@@ -117,8 +117,7 @@ TEST_CASE("A submission, its versions and its mark are saved and reloaded", "[in
     CHECK_FALSE(f.submissions.hasReleased(asg));
 }
 
-TEST_CASE("The database refuses a mark that breaks final = raw - deduction",
-          "[integration][db]") {
+TEST_CASE("The database refuses a mark that breaks final = raw - deduction", "[integration][db]") {
     Fixture f;
     const int lec = f.addUser(Role::LECTURER, "lec1");
     const int stu = f.addUser(Role::STUDENT, "stu1");
@@ -129,7 +128,7 @@ TEST_CASE("The database refuses a mark that breaks final = raw - deduction",
     Mark bad;
     bad.rawMark = 40;
     bad.deduction = 5;
-    bad.finalMark = 40;   // should be 35
+    bad.finalMark = 40;  // should be 35
     bad.feedback = "x";
     bad.markedBy = lec;
     bad.markedAt = f.t0;
@@ -190,6 +189,6 @@ TEST_CASE("SQL injection text is stored as plain data (NFR-09)", "[integration][
     CHECK(f.users.findByUsername(evil) == nullptr);
     f.addUser(Role::STUDENT, evil);
     auto u = f.users.findByUsername(evil);
-    REQUIRE(u != nullptr);   // the table still exists and the text is just a name
+    REQUIRE(u != nullptr);  // the table still exists and the text is just a name
     CHECK(u->getUsername() == evil);
 }

@@ -54,7 +54,7 @@ std::string LocalFileStore::sha256Of(const fs::path& file) {
     }
     crypto_hash_sha256_state state;
     crypto_hash_sha256_init(&state);
-    std::vector<char> buffer(64 * 1024);
+    std::vector<char> buffer(std::size_t{64} * 1024);
     while (in) {
         in.read(buffer.data(), static_cast<std::streamsize>(buffer.size()));
         const auto got = in.gcount();
@@ -74,8 +74,7 @@ StoredFile LocalFileStore::store(const std::string& path, int assignmentId, int 
                                  int versionNo) {
     validate(path);
     const fs::path source(path);
-    const fs::path folder =
-        root_ / std::to_string(assignmentId) / std::to_string(studentId);
+    const fs::path folder = root_ / std::to_string(assignmentId) / std::to_string(studentId);
     const fs::path target =
         folder / ("v" + std::to_string(versionNo) + "_" + source.filename().string());
     std::error_code ec;
@@ -131,4 +130,4 @@ void LocalFileStore::restoreFrom(const std::string& sourceDir) {
     }
 }
 
-} // namespace lms
+}  // namespace lms

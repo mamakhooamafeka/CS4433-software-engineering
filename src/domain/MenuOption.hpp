@@ -35,4 +35,4 @@ enum class MenuOption {
 // The text shown in the menu.
 std::string label(MenuOption option);
 
-} // namespace lms
+}  // namespace lms

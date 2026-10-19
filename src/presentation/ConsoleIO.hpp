@@ -20,9 +20,10 @@ public:
 
 class ConsoleIO {
 public:
-    static constexpr std::size_t kWidth = 80;   // NFR-11: at most 80 columns
+    static constexpr std::size_t kWidth = 80;  // NFR-11: at most 80 columns
 
-    ConsoleIO(std::istream& in = std::cin, std::ostream& out = std::cout) : in_(in), out_(out) {}
+    explicit ConsoleIO(std::istream& in = std::cin, std::ostream& out = std::cout)
+        : in_(in), out_(out) {}
 
     int readInt(const std::string& prompt, int min, int max);
     // A mark from 0 to max with at most one decimal place (BR-01).
@@ -54,4 +55,4 @@ std::string showMark(double mark);
 // Cuts text to a column width, adding "..." if it was longer.
 std::string fit(const std::string& text, std::size_t width);
 
-} // namespace lms
+}  // namespace lms

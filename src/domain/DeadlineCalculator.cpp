@@ -18,8 +18,8 @@ int DeadlineCalculator::daysLate(DateTime submittedAt, DateTime effectiveDeadlin
     }
     using namespace std::chrono;
     const auto lateBy = duration_cast<seconds>(submittedAt - effectiveDeadline).count();
-    constexpr long long kDay = 24 * 60 * 60;
-    return static_cast<int>((lateBy + kDay - 1) / kDay);   // ceiling division
+    constexpr long long kDay = 24LL * 60 * 60;
+    return static_cast<int>((lateBy + kDay - 1) / kDay);  // ceiling division
 }
 
-} // namespace lms
+}  // namespace lms

@@ -37,4 +37,4 @@ public:
     using LmsError::LmsError;
 };
 
-} // namespace lms
+}  // namespace lms

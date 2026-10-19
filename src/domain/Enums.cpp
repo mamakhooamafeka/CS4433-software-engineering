@@ -6,30 +6,42 @@ namespace lms {
 
 std::string toString(Role r) {
     switch (r) {
-        case Role::STUDENT: return "STUDENT";
-        case Role::LECTURER: return "LECTURER";
-        case Role::HOD: return "HOD";
-        case Role::ADMIN: return "ADMIN";
+        case Role::STUDENT:
+            return "STUDENT";
+        case Role::LECTURER:
+            return "LECTURER";
+        case Role::HOD:
+            return "HOD";
+        case Role::ADMIN:
+            return "ADMIN";
     }
     return "";
 }
 
 std::string toString(SubmissionStatus s) {
     switch (s) {
-        case SubmissionStatus::SUBMITTED: return "SUBMITTED";
-        case SubmissionStatus::LATE: return "LATE";
-        case SubmissionStatus::MARKED: return "MARKED";
-        case SubmissionStatus::MODERATED: return "MODERATED";
-        case SubmissionStatus::RELEASED: return "RELEASED";
+        case SubmissionStatus::SUBMITTED:
+            return "SUBMITTED";
+        case SubmissionStatus::LATE:
+            return "LATE";
+        case SubmissionStatus::MARKED:
+            return "MARKED";
+        case SubmissionStatus::MODERATED:
+            return "MODERATED";
+        case SubmissionStatus::RELEASED:
+            return "RELEASED";
     }
     return "";
 }
 
 std::string toString(ChangeType c) {
     switch (c) {
-        case ChangeType::INITIAL: return "INITIAL";
-        case ChangeType::CORRECTION: return "CORRECTION";
-        case ChangeType::AMENDMENT: return "AMENDMENT";
+        case ChangeType::INITIAL:
+            return "INITIAL";
+        case ChangeType::CORRECTION:
+            return "CORRECTION";
+        case ChangeType::AMENDMENT:
+            return "AMENDMENT";
     }
     return "";
 }
@@ -58,4 +70,4 @@ ChangeType changeTypeFromString(const std::string& text) {
     throw DataAccessError("The database contains an unknown audit change type.");
 }
 
-} // namespace lms
+}  // namespace lms
