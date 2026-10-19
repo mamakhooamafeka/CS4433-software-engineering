@@ -1,0 +1,9 @@
+build/
+out/
+.vs/
+.vscode/
+CMakeUserPresets.json
+*.db
+*.db-journal
+submissions/
+backups/
