@@ -6,7 +6,7 @@ namespace lms {
 
 std::unique_ptr<User> LoginScreen::run() {
     while (true) {
-        io_.heading("Moderated LMS: log in");
+        io_.heading("NUL LMS: log in");
         io_.info("Leave the username empty and press Enter to exit.");
         const std::string username = io_.readText("Username: ", 32, true);
         if (username.empty()) return nullptr;

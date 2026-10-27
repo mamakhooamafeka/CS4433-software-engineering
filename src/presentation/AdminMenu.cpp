@@ -76,8 +76,10 @@ void AdminMenu::manageAccounts(const User& admin) {
         const int r =
             io_.choose("Role", {"Student", "Lecturer", "Head of department", "Administrator"});
         if (r < 0) return;
-        const std::string username = io_.readText("Username: ", 32);
-        const std::string fullName = io_.readText("Full name: ", 100);
+                const std::string username = io_.readText("Username (Enter to cancel): ", 32, true);
+            if (username.empty()) return;
+         const std::string fullName = io_.readText("Full name (Enter to cancel): ", 100, true);
+           if (fullName.empty()) return;
         const std::string password = readNewPassword(io_, "Temporary password");
         admin_.createUser(admin, roles[static_cast<std::size_t>(r)], username, fullName, password);
         io_.info("Account created. The user must change the password at first log in.");
