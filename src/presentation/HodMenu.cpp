@@ -15,6 +15,7 @@ std::string describe(const SubmissionView& v) {
                 " = " + showMark(v.mark->finalMark);
     }
     if (v.daysLate > 0) text += " | " + std::to_string(v.daysLate) + "d late";
+    if (v.mark && !v.mark->feedback.empty()) text += " | " + v.mark->feedback;  // UC12 step 3
     return text;
 }
 

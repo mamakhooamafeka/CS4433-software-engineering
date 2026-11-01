@@ -8,6 +8,7 @@ A console Learning Management System for a secondary school: assignments, submis
 **Build and run:** see [docs/BUILD.md](docs/BUILD.md).
 **Coding standard:** see [docs/CODING_STANDARD.md](docs/CODING_STANDARD.md).
 **Code review and requirement traceability:** see [docs/REVIEW.md](docs/REVIEW.md).
+**Testing (Phase 5):** [test plan](docs/TEST_PLAN.md), [test results and coverage](docs/TEST_RESULTS.md), [defect log](docs/DEFECT_LOG.md), [acceptance tests](docs/ACCEPTANCE_TESTS.md). CI runs every test on Linux and Windows on each push (`.github/workflows/ci.yml`).
 
 ## Quick start (Ubuntu)
 

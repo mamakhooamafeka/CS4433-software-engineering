@@ -117,10 +117,14 @@ void LecturerMenu::markSubmissions(const Lecturer& lecturer) {
         io_.info("File: " + v.filePath);
         const double raw =
             io_.readMark("Raw mark (0-" + std::to_string(a->getMaxMark()) + "): ", a->getMaxMark());
-        const std::string feedback = io_.readText("Feedback: ", 2000, true);
-        const Mark m = marking_.mark(lecturer, v.submissionId, raw, feedback);
-        io_.info("Saved. Raw " + showMark(m.rawMark) + ", late deduction " + showMark(m.deduction) +
-                 ", final " + showMark(m.finalMark) + ".");
+        const std::string feedback = io_.readText("Feedback: ", 2000);  // UC11 5a: asks again
+        const Mark p = marking_.preview(lecturer, v.submissionId, raw, feedback);
+        io_.info("Raw " + showMark(p.rawMark) + ", late deduction " + showMark(p.deduction) + " (" +
+                 std::to_string(p.daysLate) + " day(s) late), final " + showMark(p.finalMark) +
+                 ".");
+        if (!io_.confirm("Save this mark?")) continue;  // UC11 step 7
+        marking_.mark(lecturer, v.submissionId, raw, feedback);
+        io_.info("Saved. Students see it only after the HoD releases it.");
     }
 }
 

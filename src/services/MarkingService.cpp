@@ -73,6 +73,12 @@ std::vector<SubmissionView> MarkingService::listSubmissions(const Lecturer& lect
     return out;
 }
 
+Mark MarkingService::preview(const Lecturer& lecturer, int submissionId, double rawMark,
+                             const std::string& feedback) {
+    const Context ctx = load(lecturer, submissionId);
+    return computeMark(ctx, rawMark, feedback, lecturer.getId());
+}
+
 Mark MarkingService::mark(const Lecturer& lecturer, int submissionId, double rawMark,
                           const std::string& feedback) {
     Context ctx = load(lecturer, submissionId);

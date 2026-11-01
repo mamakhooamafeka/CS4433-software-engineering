@@ -32,6 +32,10 @@ public:
 
     std::vector<SubmissionView> listSubmissions(const Lecturer& lecturer, int assignmentId,
                                                 bool unmarkedOnly);
+    // Works out the mark (with the late penalty) without saving it, so the lecturer
+    // can see raw, deduction and final mark before confirming (UC11 steps 6-7).
+    Mark preview(const Lecturer& lecturer, int submissionId, double rawMark,
+                 const std::string& feedback);
     Mark mark(const Lecturer& lecturer, int submissionId, double rawMark,
               const std::string& feedback);
     Mark correct(const Lecturer& lecturer, int submissionId, double rawMark,

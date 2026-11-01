@@ -1,0 +1,74 @@
+# Continuous integration for the Moderated LMS (Phase 5).
+# Runs on every push and pull request:
+#   1. linux:   build with warnings, run all tests, measure coverage of the business
+#               logic (src/domain + src/services) and fail if it is below 70% (NFR-12).
+#   2. windows: build with MSVC + vcpkg and run all tests, like on the student laptop.
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  linux:
+    name: Linux build, tests and coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ libsqlite3-dev libsodium-dev
+          pip install gcovr==8.2
+
+      - name: Configure (coverage build)
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage -O0"
+
+      - name: Build
+        run: cmake --build build -j 4
+
+      - name: Run all tests
+        run: ctest --test-dir build --output-on-failure --output-junit test-results.xml
+
+      - name: Coverage of business logic (must be at least 70%)
+        run: |
+          mkdir -p coverage
+          gcovr -r . --filter 'src/domain/' --filter 'src/services/' \
+                --html-details coverage/index.html --txt coverage/business-logic.txt \
+                --fail-under-line 70 build
+          gcovr -r . --filter 'src/' --txt coverage/all-src.txt build
+          cat coverage/business-logic.txt
+          echo "### Line coverage (business logic)" >> "$GITHUB_STEP_SUMMARY"
+          tail -2 coverage/business-logic.txt | head -1 >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Keep the test results and coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-and-coverage
+          path: |
+            build/test-results.xml
+            coverage/
+
+  windows:
+    name: Windows build and tests (MSVC + vcpkg)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install libraries with vcpkg
+        run: vcpkg install sqlite3:x64-windows libsodium:x64-windows catch2:x64-windows
+
+      - name: Configure
+        shell: pwsh
+        run: |
+          $tc = "$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
+          cmake -S . -B build "-DCMAKE_TOOLCHAIN_FILE=$tc"
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Run all tests
+        run: ctest --test-dir build -C Release --output-on-failure

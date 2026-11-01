@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="lms_tests" errors="0" failures="0" skipped="0" tests="366" hostname="tbd" time="26.080" timestamp="2026-10-31T21:43:57Z">
+    <properties>
+      <property name="random-seed" value="3123617289"/>
+    </properties>
+    <testcase classname="lms_tests.global" name="The first administrator can only be created on an empty system" time="0.095" status="run"/>
+    <testcase classname="lms_tests.global" name="Only an administrator can manage accounts (FR-01, BR-07)" time="0.085" status="run"/>
+    <testcase classname="lms_tests.global" name="The administrator sets up departments, courses, lecturers and students" time="0.335" status="run"/>
+    <testcase classname="lms_tests.global" name="Wrong roles and bad input are refused with clear errors" time="0.163" status="run"/>
+    <testcase classname="lms_tests.global" name="One HoD cannot head two departments (ASM-04)" time="0.166" status="run"/>
+    <testcase classname="lms_tests.global" name="Passwords are stored as Argon2id hashes, never as plain text (NFR-08)" time="0.250" status="run"/>
+    <testcase classname="lms_tests.global" name="Login succeeds with the right password and fails with a wrong one" time="0.263" status="run"/>
+    <testcase classname="lms_tests.global" name="Five wrong passwords lock the account for 15 minutes (FR-02)" time="0.600" status="run"/>
+    <testcase classname="lms_tests.global" name="A deactivated user cannot log in (FR-04)" time="0.170" status="run"/>
+    <testcase classname="lms_tests.global" name="Changing a password needs the current one and 8+ characters (FR-03)" time="0.485" status="run"/>
+    <testcase classname="lms_tests.global" name="A reset password must be changed at the next login (FR-05)" time="0.339" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-01 days late at every 24-hour boundary (BR-01)" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-02 penalty at 3 and 4 days late (BR-01 cut-off)" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-03 submission status on the deadline second (C2)" time="0.514" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-04 resubmission allowed on the deadline, refused one second later (BR-03)" time="0.250" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-05 file size 0, 1, 10 MiB and 10 MiB + 1 byte (FR-11)" time="0.409" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-06 raw mark -0.1, 0, M and M + 0.1 (FR-13)" time="0.251" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-07 raw mark with two decimals is rounded to one (EP: valid class)" time="0.262" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-08 maximum mark 0, 1, 1000 and 1001 (FR-08)" time="0.230" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-09 new deadline equal to now is refused, one second later accepted (FR-08)" time="0.251" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-10 title length 0, 1, 200 and 201 characters (FR-08)" time="0.263" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-11 extension earlier, equal to and one second after the deadline (BR-02)" time="0.256" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-12 password length 7, 8, 128 and 129 characters (FR-03)" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-13 username length 2, 3, 32 and 33 characters" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-14 four failed logins do not lock, the fifth does (FR-02)" time="1.074" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-15 lock lasts exactly 15 minutes (FR-02)" time="0.729" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-16 menu choice 0, 1, n and n + 1 (EP: numbers, words, empty)" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-17 typed mark: -0.1, 0, M, M + 0.1 and two decimals (FR-13)" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="BV-18 typed text at the maximum length and one over" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="ISO 8601 text round-trips through DateTime" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="Console format without seconds is accepted" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="Leap days are handled (boundary values)" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="Invalid dates are rejected with ValidationError" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="One day apart is exactly 86400 seconds" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="Dates far in the future work (boundary values)" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="BR-01 decision table, M = 100, raw = 75" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="The final mark never goes below zero" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="Marks are held to one decimal place" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="The penalty is a share of the maximum mark, not of the raw mark" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="ConsoleIO asks again until the input is valid" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="ConsoleIO throws InputClosed when the input ends" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="LoginScreen shows a plain message for a wrong password, then exits" time="0.331" status="run"/>
+    <testcase classname="lms_tests.global" name="A student can submit through the menu and gets a receipt" time="0.263" status="run"/>
+    <testcase classname="lms_tests.global" name="An HoD sees only their own department's marked work (FR-15, BR-07)" time="0.452" status="run"/>
+    <testcase classname="lms_tests.global" name="Approve, preview and release, then the student sees the result (FR-17, FR-18)" time="0.448" status="run"/>
+    <testcase classname="lms_tests.global" name="Release with nothing moderated is refused" time="0.397" status="run"/>
+    <testcase classname="lms_tests.global" name="Release is all-or-nothing (FR-17)" time="0.473" status="run"/>
+    <testcase classname="lms_tests.global" name="Amend needs a reason, re-applies BR-01 and is audited (FR-16, FR-19)" time="0.395" status="run"/>
+    <testcase classname="lms_tests.global" name="A lecturer cannot change a mark once it is moderated (BR-07)" time="0.442" status="run"/>
+    <testcase classname="lms_tests.global" name="An HoD's audit view never shows another department (FR-20)" time="0.451" status="run"/>
+    <testcase classname="lms_tests.global" name="Backup once per day, and restore brings the old data back (FR-21)" time="0.547" status="run"/>
+    <testcase classname="lms_tests.global" name="A new database gets the schema and passes the integrity check" time="0.001" status="run"/>
+    <testcase classname="lms_tests.global" name="Users round-trip with their role and scope" time="0.001" status="run"/>
+    <testcase classname="lms_tests.global" name="Usernames are unique and case-insensitive" time="0.001" status="run"/>
+    <testcase classname="lms_tests.global" name="Failed logins and lockout are saved" time="0.001" status="run"/>
+    <testcase classname="lms_tests.global" name="A submission, its versions and its mark are saved and reloaded" time="0.001" status="run"/>
+    <testcase classname="lms_tests.global" name="The database refuses a mark that breaks final = raw - deduction" time="0.001" status="run"/>
+    <testcase classname="lms_tests.global" name="The audit log is append-only and filterable" time="0.001" status="run"/>
+    <testcase classname="lms_tests.global" name="A transaction that is not committed is rolled back" time="0.001" status="run"/>
+    <testcase classname="lms_tests.global" name="SQL injection text is stored as plain data (NFR-09)" time="0.001" status="run"/>
+    <testcase classname="lms_tests.global" name="On-time submission is stored with size and SHA-256 (FR-11)" time="0.223" status="run"/>
+    <testcase classname="lms_tests.global" name="Late submission is accepted and marked LATE (C2)" time="0.220" status="run"/>
+    <testcase classname="lms_tests.global" name="Files are validated: missing, empty and over 10 MB are refused" time="0.400" status="run"/>
+    <testcase classname="lms_tests.global" name="A student not enrolled in the course cannot submit (BR-07)" time="0.230" status="run"/>
+    <testcase classname="lms_tests.global" name="Resubmission keeps every version until the deadline (FR-12, BR-03)" time="0.243" status="run"/>
+    <testcase classname="lms_tests.global" name="Marking applies the BR-01 penalty and writes an audit row" time="0.243" status="run"/>
+    <testcase classname="lms_tests.global" name="Marks outside 0..M and empty feedback are refused (FR-13)" time="0.239" status="run"/>
+    <testcase classname="lms_tests.global" name="A correction needs a reason and is audited with old and new values" time="0.248" status="run"/>
+    <testcase classname="lms_tests.global" name="An extension needs a reason, moves the deadline later and fixes LATE (DC-01)" time="0.217" status="run"/>
+    <testcase classname="lms_tests.global" name="An extension can be granted before the student submits (DC-02)" time="0.236" status="run"/>
+    <testcase classname="lms_tests.global" name="Students never see marks before release (FR-14, BR-04)" time="0.231" status="run"/>
+    <testcase classname="lms_tests.global" name="A submission exactly at the deadline is SUBMITTED" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="A submission one second after the deadline is LATE, not rejected" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="Resubmission before the deadline adds a version and keeps the old one" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="Resubmission after the deadline is refused (BR-03)" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="Resubmission after marking is refused (BR-03)" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="Full life cycle: mark, approve, release" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="Amend moves MARKED to MODERATED and keeps RELEASED as RELEASED" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="Events not allowed in a state are refused" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="An extension turns LATE back into SUBMITTED (DC-01)" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-01 UC16 main flow: on-time submission with receipt" time="0.391" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-02 UC16 3a: resubmission before the deadline makes version 2" time="0.424" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-03 UC16 6a: late submission warns about the deduction and is stored as LATE" time="0.468" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-04 UC16 8a: cancelling at the confirmation stores nothing" time="0.414" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-05 UC16 1a: a student with no open assignments is told so" time="0.403" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-06 UC16 3b: resubmission after marking is refused with the reason" time="0.401" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-07 UC16 5a: three bad files return to the menu with plain errors" time="0.392" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-08 UC16 5a: a bad file then a good one continues normally" time="0.393" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-09 UC16 precondition: a released assignment is closed (BR-06)" time="0.402" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-10 UC11 main flow with 4a: bad marks are asked again, penalty shown, saved" time="0.400" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-11 UC11 5a: empty feedback is refused and asked again" time="0.408" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-12 UC11 step 7: not confirming leaves the submission unmarked" time="0.444" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-13 UC11 2a: the marking list shows only unmarked submissions" time="0.460" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-14 UC11 3a: correcting a MARKED submission needs a reason and is audited" time="0.396" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-15 UC11 3b: a MODERATED mark cannot be corrected by the lecturer" time="0.369" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-16 UC12 main flow: approve all, release, the student sees the result" time="0.412" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-17 UC12 4: approve only some, with bad numbers asked again" time="0.485" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-18 UC12 4a: amend with a reason re-applies the penalty and is audited" time="0.402" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-19 UC12 5a and 6: stop after approving; preview counts the rest" time="0.503" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-20 UC12 7a: cancelling the release changes nothing" time="0.426" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-21 UC12 9a: amending a released mark updates what the student sees" time="0.403" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-22 UC12 1a: nothing marked yet is reported plainly" time="0.407" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-23 UC12 2a: another department's HoD cannot see the assignment (BR-07)" time="0.398" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-24 UC01: a new account must change its temporary password at first login" time="0.804" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-25 NFR-07: 100 invalid inputs cause zero crashes" time="0.416" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-26 NFR-07: the input ending mid-way ends the program cleanly" time="0.419" status="run"/>
+    <testcase classname="lms_tests.global" name="ST-27 UC03: pressing Enter on an empty username cancels account creation (D14)" time="0.464" status="run"/>
+    <testcase classname="lms_tests.global" name="UserFactory builds the right subclass for each role" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="New accounts must change their password" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="Each role sees only its own menu options (FR-01)" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="Course access follows BR-07" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="Five failed logins lock the account for 15 minutes (FR-02)" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="Effective deadline is the latest extension (BR-02)" time="0.000" status="run"/>
+    <testcase classname="lms_tests.global" name="Days late counts started 24-hour periods (BR-01 boundaries)" time="0.000" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

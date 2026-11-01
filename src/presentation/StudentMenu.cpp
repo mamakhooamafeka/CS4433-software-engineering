@@ -18,6 +18,13 @@ std::string statusText(const AssignmentView& v) {
     return v.status ? toString(*v.status) : "not submitted";
 }
 
+// For example "2 day(s) 3 h 15 min" (UC16 step 3).
+std::string timeLeft(DateTime now, DateTime deadline) {
+    const auto mins = std::chrono::duration_cast<std::chrono::minutes>(deadline - now).count();
+    return std::to_string(mins / 1440) + " day(s) " + std::to_string((mins % 1440) / 60) + " h " +
+           std::to_string(mins % 60) + " min";
+}
+
 }  // namespace
 
 void StudentMenu::handle(User& user, MenuOption option) {
@@ -84,8 +91,13 @@ void StudentMenu::submit(const Student& student) {
     io_.info("Assignment: " + preview->assignmentTitle);
     io_.info("Your deadline: " + showTime(preview->effectiveDeadline) + " UTC");
     io_.info("Time now:      " + showTime(preview->now) + " UTC");
+    if (preview->effectiveDeadline > preview->now) {
+        io_.info("Time left:     " + timeLeft(preview->now, preview->effectiveDeadline));
+    }
     if (preview->isResubmission && !preview->canResubmit) {
         io_.info("You cannot resubmit: it is past the deadline or already marked (BR-03).");
+        io_.info("Your version " + std::to_string(preview->currentVersion) + " is kept, status " +
+                 (preview->currentStatus ? toString(*preview->currentStatus) : "-") + ".");
         return;
     }
     if (preview->daysLate > 0) {
