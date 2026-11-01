@@ -40,7 +40,7 @@ Steps:
 
 Expected: every step says it was created, assigned or enrolled; step 10 lists 4 accounts; at step 12 the program goes straight to the log-in screen (it does **not** ask for a new first administrator, so the data was kept).
 
-Result: ______
+Result: Pass (1 Nov 2026)
 
 ## AT-02 First log in forces a new password, and lockout (UC01, FR-02, FR-05)
 
@@ -57,7 +57,7 @@ Steps:
 
 Expected: step 1 says you are using a temporary password; step 2 says it needs at least 8 characters; step 3 says the password has been changed and shows the student menu; step 6 is refused because the account is locked for 15 minutes.
 
-Result: ______
+Result: Pass (1 Nov 2026)
 
 (Continue with the other tests while `stu1` is locked. Log in as `stu1` again after 15 minutes.)
 
@@ -74,7 +74,7 @@ Steps:
 
 Expected: `1001` is refused and asked again; both assignments are created.
 
-Result: ______
+Result: Pass (1 Nov 2026)
 
 ## AT-04 Student submits and resubmits on time (UC16, UC17)
 
@@ -91,7 +91,7 @@ Steps:
 
 Expected: step 4 shows both assignments with their deadlines; step 5 shows "Time left", then a receipt with the file size, version 1, status SUBMITTED and a SHA-256 code; step 6 says "This becomes version 2" and the receipt shows version 2.
 
-Result: ______
+Result: Pass (1 Nov 2026)
 
 ## AT-05 Late submission is accepted with a warning (UC16 6a, BR-01)
 
@@ -106,7 +106,7 @@ Steps:
 
 Expected: the message says "This is late by 1 day(s): 10% of the maximum mark will be deducted; zero after 3 days"; the receipt shows status LATE.
 
-Result: ______
+Result: Pass (1 Nov 2026)
 
 ## AT-06 Lecturer marks with the penalty shown first (UC11)
 
@@ -124,7 +124,7 @@ Steps:
 
 Expected: `abc` and `51` are asked again; the empty feedback says "This cannot be empty." and asks again; step 5 shows "Raw 40.0, late deduction 5.0 (1 day(s) late), final 35.0" before you confirm, then "Saved".
 
-Result: ______
+Result: Pass (1 Nov 2026)
 
 ## AT-07 HoD moderates and releases; the student sees the result (UC12, UC18)
 
@@ -142,7 +142,7 @@ Steps:
 
 Expected: step 1 says no results have been released yet; step 3 shows the mark with its feedback and says 1 mark approved; step 4 changes nothing; step 5 says 1 mark released; step 6 lists the lecturer's marks with who made them; step 7 shows `Essay 1` with mark 72.0 / 100 and the feedback. `Quick quiz` is **not** shown (it was not moderated).
 
-Result: ______
+Result: Pass (1 Nov 2026)
 
 ## AT-08 Administrator safety: cancel, backup and restore (UC03, UC08, D14)
 
@@ -159,7 +159,7 @@ Steps:
 
 Expected: step 2 goes back to the menu without creating anything; step 3 prints the backup file name; after the restore, step 6 lists the 4 original accounts and **not** `extra`.
 
-Result: ______
+Result: Pass (1 Nov 2026)
 
 ---
 

@@ -18,8 +18,8 @@ Run on 31 October 2026, commit "Phase 5: verification and validation".
 | Platform | Compiler | Result |
 |---|---|---|
 | Ubuntu 24.04 | GCC 13.3, `-Wall -Wextra -Wpedantic -Wshadow -Wconversion` | 0 warnings, 114 / 114 pass |
-| Windows 10/11 (student laptop) | MSVC Build Tools 2022 + vcpkg | v1.0: 69 / 69 pass. Re-run with the Phase 5 tests: see section 4 |
-| GitHub Actions | Linux and Windows jobs in `.github/workflows/ci.yml` | runs on every push; link to the run: see section 4 |
+| Windows 10/11 (student laptop) | MSVC Build Tools 2022 + vcpkg | 114 / 114 pass (1 November 2026) |
+| GitHub Actions | Linux and Windows jobs in `.github/workflows/ci.yml` | both jobs pass on every push; first run linked in section 4 |
 
 Machine-readable results: `docs/test-results/test-results.xml` (JUnit format, readable by CI tools).
 
@@ -49,24 +49,26 @@ Full report with every line marked: open `docs/test-results/coverage/index.html`
 
 ## 3. Acceptance tests
 
-Run by hand on Windows using `docs/ACCEPTANCE_TESTS.md`.
+Run by hand on Windows using `docs/ACCEPTANCE_TESTS.md` on 1 November 2026. All 8 passed, so the acceptance exit criterion is met.
 
 | ID | Test | Result |
 |---|---|---|
-| AT-01 | Administrator sets up the system | |
-| AT-02 | First log in and lockout | |
-| AT-03 | Lecturer creates assignments | |
-| AT-04 | Student submits and resubmits on time | |
-| AT-05 | Late submission with warning | |
-| AT-06 | Lecturer marks with the penalty shown first | |
-| AT-07 | HoD moderates and releases | |
-| AT-08 | Cancel, backup and restore | |
+| AT-01 | Administrator sets up the system | Pass (1 Nov 2026) |
+| AT-02 | First log in and lockout | Pass (1 Nov 2026) |
+| AT-03 | Lecturer creates assignments | Pass (1 Nov 2026) |
+| AT-04 | Student submits and resubmits on time | Pass (1 Nov 2026) |
+| AT-05 | Late submission with warning | Pass (1 Nov 2026) |
+| AT-06 | Lecturer marks with the penalty shown first | Pass (1 Nov 2026) |
+| AT-07 | HoD moderates and releases | Pass (1 Nov 2026) |
+| AT-08 | Cancel, backup and restore | Pass (1 Nov 2026) |
 
-## 4. To fill in after pushing to GitHub
+## 4. Windows and CI evidence
 
 | Item | Value |
 |---|---|
-| Windows `ctest` on the laptop | ___ / 114 passed |
-| GitHub Actions run (link) | |
-| Linux job | |
-| Windows job | |
+| Windows `ctest` on the laptop | 114 / 114 passed |
+| GitHub Actions run (link) | https://github.com/mamakhooamafeka/CS4433-software-engineering/actions/runs/41294443447 |
+| Linux job | passed (1 min 30 s); business-logic coverage 993 / 1,060 lines = 93.7% |
+| Windows job | passed (3 min 43 s) |
+
+The CI coverage count (993 / 1,060) differs from the local count (994 / 1,061) by one line because CI uses a newer GCC version; both are 93.7%.
