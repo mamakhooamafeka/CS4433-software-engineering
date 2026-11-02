@@ -53,7 +53,7 @@ std::vector<SubmissionView> MarkingService::listSubmissions(const Lecturer& lect
                                          SubmissionStatus::RELEASED});
     }
     std::vector<SubmissionView> out;
-    for (SubmissionStatus st : statuses) {
+    for (const SubmissionStatus st : statuses) {
         for (const Submission& s : submissions_.byAssignmentAndStatus(assignmentId, st)) {
             SubmissionView v;
             v.submissionId = s.getId();

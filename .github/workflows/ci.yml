@@ -3,6 +3,7 @@
 #   1. linux:   build with warnings, run all tests, measure coverage of the business
 #               logic (src/domain + src/services) and fail if it is below 70% (NFR-12).
 #   2. windows: build with MSVC + vcpkg and run all tests, like on the student laptop.
+#   3. static-analysis: cppcheck and clang-tidy must report nothing; also saves code metrics.
 name: CI
 
 on:
@@ -13,7 +14,7 @@ on:
 jobs:
   linux:
     name: Linux build, tests and coverage
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -72,3 +73,48 @@ jobs:
 
       - name: Run all tests
         run: ctest --test-dir build -C Release --output-on-failure
+
+  static-analysis:
+    name: Static analysis (cppcheck + clang-tidy)
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ libsqlite3-dev libsodium-dev cppcheck clang-tidy
+          pip install lizard==1.17.10
+
+      - name: Configure (writes compile_commands.json for clang-tidy)
+        run: cmake -S . -B build -DLMS_BUILD_TESTS=OFF
+
+      - name: cppcheck
+        run: |
+          mkdir -p reports
+          cppcheck --enable=warning,style,performance,portability --std=c++17 \
+                   --error-exitcode=1 --suppress=useStlAlgorithm --suppress=missingIncludeSystem \
+                   -I src -I build/generated src app 2>&1 | tee reports/cppcheck.txt
+
+      - name: clang-tidy (settings in .clang-tidy)
+        run: |
+          find src app -name '*.cpp' | xargs -P 4 -n 4 clang-tidy -p build --quiet 2>&1 \
+            | tee reports/clang-tidy.txt
+
+      - name: Code metrics (lines of code and cyclomatic complexity)
+        if: always()
+        run: |
+          lizard src app -l cpp > reports/metrics.txt || true
+          echo "### Code metrics" >> "$GITHUB_STEP_SUMMARY"
+          tail -3 reports/metrics.txt | head -1 >> "$GITHUB_STEP_SUMMARY"
+          tail -1 reports/metrics.txt >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Keep the reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-analysis-and-metrics
+          path: reports/

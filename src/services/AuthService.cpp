@@ -51,43 +51,46 @@ void AuthService::changePassword(User& user, const std::string& currentPassword,
 }
 
 int AuthService::pendingWorkCount(const User& user) {
-    int count = 0;
     switch (user.role()) {
         case Role::LECTURER:
-            for (const Course& c : courses_.coursesOfLecturer(user.getId())) {
-                for (const Assignment& a : assignments_.byCourse(c.getId())) {
-                    count += static_cast<int>(
-                        submissions_.byAssignmentAndStatus(a.getId(), SubmissionStatus::SUBMITTED)
-                            .size() +
-                        submissions_.byAssignmentAndStatus(a.getId(), SubmissionStatus::LATE)
-                            .size());
-                }
-            }
-            break;
+            return countSubmissions(courses_.coursesOfLecturer(user.getId()),
+                                    {SubmissionStatus::SUBMITTED, SubmissionStatus::LATE});
         case Role::HOD: {
-            const auto dept = static_cast<const HeadOfDepartment&>(user).getDepartmentId();
-            if (!dept) break;
-            for (const Course& c : courses_.coursesOfDepartment(*dept)) {
-                for (const Assignment& a : assignments_.byCourse(c.getId())) {
-                    count += static_cast<int>(
-                        submissions_.byAssignmentAndStatus(a.getId(), SubmissionStatus::MARKED)
-                            .size());
-                }
-            }
-            break;
+            const auto dept = dynamic_cast<const HeadOfDepartment&>(user).getDepartmentId();
+            if (!dept) return 0;
+            return countSubmissions(courses_.coursesOfDepartment(*dept),
+                                    {SubmissionStatus::MARKED});
         }
         case Role::STUDENT:
-            for (const Course& c : courses_.coursesOfStudent(user.getId())) {
-                for (const Assignment& a : assignments_.byCourse(c.getId())) {
-                    if (!submissions_.hasReleased(a.getId()) &&
-                        !submissions_.find(a.getId(), user.getId())) {
-                        ++count;
-                    }
-                }
-            }
-            break;
+            return countUnsubmitted(user);
         case Role::ADMIN:
             break;
+    }
+    return 0;
+}
+
+int AuthService::countSubmissions(const std::vector<Course>& courses,
+                                  std::initializer_list<SubmissionStatus> statuses) {
+    std::size_t count = 0;
+    for (const Course& c : courses) {
+        for (const Assignment& a : assignments_.byCourse(c.getId())) {
+            for (const SubmissionStatus st : statuses) {
+                count += submissions_.byAssignmentAndStatus(a.getId(), st).size();
+            }
+        }
+    }
+    return static_cast<int>(count);
+}
+
+int AuthService::countUnsubmitted(const User& student) {
+    int count = 0;
+    for (const Course& c : courses_.coursesOfStudent(student.getId())) {
+        for (const Assignment& a : assignments_.byCourse(c.getId())) {
+            if (!submissions_.hasReleased(a.getId()) &&
+                !submissions_.find(a.getId(), student.getId())) {
+                ++count;
+            }
+        }
     }
     return count;
 }

@@ -53,6 +53,8 @@ public:
     }
     EchoOff(const EchoOff&) = delete;
     EchoOff& operator=(const EchoOff&) = delete;
+    EchoOff(EchoOff&&) = delete;
+    EchoOff& operator=(EchoOff&&) = delete;
 
 private:
     bool active_;
@@ -134,7 +136,7 @@ std::string ConsoleIO::readText(const std::string& prompt, std::size_t maxLen, b
 std::string ConsoleIO::readPassword(const std::string& prompt) {
     std::string text;
     {
-        EchoOff guard(isRealConsole(in_));
+        const EchoOff guard(isRealConsole(in_));
         text = readLine(prompt);
     }
     if (isRealConsole(in_)) out_ << '\n';

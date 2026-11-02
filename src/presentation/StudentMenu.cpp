@@ -25,6 +25,43 @@ std::string timeLeft(DateTime now, DateTime deadline) {
            std::to_string(mins % 60) + " min";
 }
 
+// UC16 steps 3, 6, 7 and flows 3a, 3b, 6a. Returns false when the student cannot submit.
+bool showPreview(ConsoleIO& io, const SubmissionPreview& p) {
+    io.heading("Check before you submit");
+    io.info("Assignment: " + p.assignmentTitle);
+    io.info("Your deadline: " + showTime(p.effectiveDeadline) + " UTC");
+    io.info("Time now:      " + showTime(p.now) + " UTC");
+    if (p.effectiveDeadline > p.now) {
+        io.info("Time left:     " + timeLeft(p.now, p.effectiveDeadline));
+    }
+    if (p.isResubmission && !p.canResubmit) {
+        io.info("You cannot resubmit: it is past the deadline or already marked (BR-03).");
+        io.info("Your version " + std::to_string(p.currentVersion) + " is kept, status " +
+                (p.currentStatus ? toString(*p.currentStatus) : "-") + ".");
+        return false;
+    }
+    if (p.daysLate > 0) {
+        io.info("This is late by " + std::to_string(p.daysLate) +
+                " day(s): " + std::to_string(10 * p.daysLate) +
+                "% of the maximum mark will be deducted; zero after 3 days.");
+    }
+    if (p.isResubmission) {
+        io.info("This becomes version " + std::to_string(p.currentVersion + 1) +
+                ". Earlier versions are kept, but only the newest is marked.");
+    }
+    return true;
+}
+
+// UC16 step 10.
+void showReceipt(ConsoleIO& io, const Receipt& r) {
+    io.heading("Submission receipt");
+    io.info("Assignment: " + r.assignmentTitle);
+    io.info("File: " + r.originalName + " (" + std::to_string(r.sizeBytes) + " bytes)");
+    io.info("Version: " + std::to_string(r.versionNo) + ", status " + toString(r.status));
+    io.info("Received: " + showTime(r.submittedAt) + " UTC");
+    io.info("SHA-256: " + r.sha256);
+}
+
 }  // namespace
 
 void StudentMenu::handle(User& user, MenuOption option) {
@@ -76,48 +113,24 @@ void StudentMenu::submit(const Student& student) {
     const int assignmentId = list[static_cast<std::size_t>(pick)].assignment.getId();
 
     std::string path;
-    std::optional<SubmissionPreview> preview;
-    for (int attempt = 0; attempt < 3 && !preview; ++attempt) {
+    const auto preview = askForFile(student, assignmentId, path);
+    if (!preview || !showPreview(io_, *preview)) return;
+    if (!io_.confirm("Submit this file now?")) return;
+    showReceipt(io_, submissions_.submit(student, assignmentId, path));
+}
+
+// UC16 steps 4-5 and exception 5a: up to three tries to give a usable file (FR-11).
+std::optional<SubmissionPreview> StudentMenu::askForFile(const Student& student, int assignmentId,
+                                                         std::string& path) {
+    for (int attempt = 0; attempt < 3; ++attempt) {
         path = stripQuotes(io_.readText("Full path of your file: ", 1000));
         try {
-            preview = submissions_.preview(student, assignmentId, path);
-        } catch (const ValidationError& e) {  // missing, empty or too big (FR-11)
+            return submissions_.preview(student, assignmentId, path);
+        } catch (const ValidationError& e) {  // missing, empty or too big
             io_.showError(e);
         }
     }
-    if (!preview) return;
-
-    io_.heading("Check before you submit");
-    io_.info("Assignment: " + preview->assignmentTitle);
-    io_.info("Your deadline: " + showTime(preview->effectiveDeadline) + " UTC");
-    io_.info("Time now:      " + showTime(preview->now) + " UTC");
-    if (preview->effectiveDeadline > preview->now) {
-        io_.info("Time left:     " + timeLeft(preview->now, preview->effectiveDeadline));
-    }
-    if (preview->isResubmission && !preview->canResubmit) {
-        io_.info("You cannot resubmit: it is past the deadline or already marked (BR-03).");
-        io_.info("Your version " + std::to_string(preview->currentVersion) + " is kept, status " +
-                 (preview->currentStatus ? toString(*preview->currentStatus) : "-") + ".");
-        return;
-    }
-    if (preview->daysLate > 0) {
-        io_.info("This is late by " + std::to_string(preview->daysLate) +
-                 " day(s): " + std::to_string(10 * preview->daysLate) +
-                 "% of the maximum mark will be deducted; zero after 3 days.");
-    }
-    if (preview->isResubmission) {
-        io_.info("This becomes version " + std::to_string(preview->currentVersion + 1) +
-                 ". Earlier versions are kept, but only the newest is marked.");
-    }
-    if (!io_.confirm("Submit this file now?")) return;
-
-    const Receipt r = submissions_.submit(student, assignmentId, path);
-    io_.heading("Submission receipt");
-    io_.info("Assignment: " + r.assignmentTitle);
-    io_.info("File: " + r.originalName + " (" + std::to_string(r.sizeBytes) + " bytes)");
-    io_.info("Version: " + std::to_string(r.versionNo) + ", status " + toString(r.status));
-    io_.info("Received: " + showTime(r.submittedAt) + " UTC");
-    io_.info("SHA-256: " + r.sha256);
+    return std::nullopt;
 }
 
 // UC18 (FR-18, BR-04): only released results ever reach this screen.

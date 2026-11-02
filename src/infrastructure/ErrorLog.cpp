@@ -22,12 +22,12 @@ std::mutex& logMutex() {
 }  // namespace
 
 void ErrorLog::setPath(const std::string& path) {
-    std::lock_guard<std::mutex> lock(logMutex());
+    const std::lock_guard<std::mutex> lock(logMutex());
     logPath() = path;
 }
 
 void ErrorLog::write(const std::string& detail) {
-    std::lock_guard<std::mutex> lock(logMutex());
+    const std::lock_guard<std::mutex> lock(logMutex());
     std::ofstream out(logPath(), std::ios::app);
     if (out) {
         out << toIso8601(std::chrono::system_clock::now()) << "  " << detail << '\n';

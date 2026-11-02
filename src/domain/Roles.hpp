@@ -53,7 +53,7 @@ public:
     Role role() const override { return Role::ADMIN; }
     std::vector<MenuOption> menuOptions() const override;
     // The administrator manages records but has no academic access to marks (BR-07).
-    bool canAccessCourse(const Course&) const override { return false; }
+    bool canAccessCourse(const Course& /*course*/) const override { return false; }
 };
 
 }  // namespace lms

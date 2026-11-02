@@ -4,6 +4,21 @@
 #include "services/Validation.hpp"
 
 namespace lms {
+namespace {
+
+// FR-23: what the pending count means for each role.
+const char* pendingWhat(Role role) {
+    switch (role) {
+        case Role::STUDENT:
+            return " assignment(s) to submit";
+        case Role::HOD:
+            return " submission(s) to moderate";
+        default:
+            return " submission(s) to mark";
+    }
+}
+
+}  // namespace
 
 void MenuScreen::run(User& user) {
     while (true) {
@@ -11,10 +26,7 @@ void MenuScreen::run(User& user) {
         io_.heading("Main menu: " + user.getFullName() + " (" + toString(user.role()) + ")");
         const int pending = auth_.pendingWorkCount(user);  // FR-23
         if (pending > 0) {
-            const char* what = user.role() == Role::STUDENT ? " assignment(s) to submit"
-                               : user.role() == Role::HOD   ? " submission(s) to moderate"
-                                                            : " submission(s) to mark";
-            io_.info("You have " + std::to_string(pending) + what + ".");
+            io_.info("You have " + std::to_string(pending) + pendingWhat(user.role()) + ".");
         }
         for (std::size_t i = 0; i < options.size(); ++i) {
             io_.info(std::to_string(i + 1) + ". " + label(options[i]));

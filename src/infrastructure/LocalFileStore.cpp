@@ -41,7 +41,7 @@ void LocalFileStore::validate(const std::string& path) {
     if (size > static_cast<std::uintmax_t>(kMaxFileBytes)) {
         throw ValidationError("That file is larger than 10 MB.");
     }
-    std::ifstream in(p, std::ios::binary);
+    const std::ifstream in(p, std::ios::binary);
     if (!in) {
         throw ValidationError("That file cannot be read. Is it open in another program?");
     }

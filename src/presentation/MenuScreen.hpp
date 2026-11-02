@@ -18,6 +18,8 @@ public:
     virtual ~MenuScreen() = default;
     MenuScreen(const MenuScreen&) = delete;
     MenuScreen& operator=(const MenuScreen&) = delete;
+    MenuScreen(MenuScreen&&) = delete;
+    MenuScreen& operator=(MenuScreen&&) = delete;
 
     // Shows the menu until the user chooses "Log out".
     void run(User& user);

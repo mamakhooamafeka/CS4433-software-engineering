@@ -1,0 +1,40 @@
+# clang-tidy configuration (Phase 6 quality assurance).
+# Every check family below is on. The few checks switched off are decisions
+# explained in docs/QA_REPORT.md section 2.3; CI fails on any other finding.
+Checks: >
+  -*,
+  bugprone-*,
+  performance-*,
+  modernize-*,
+  readability-*,
+  cppcoreguidelines-*,
+  misc-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-empty-catch,
+  -cppcoreguidelines-avoid-c-arrays,
+  -cppcoreguidelines-avoid-const-or-ref-data-members,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-non-private-member-variables-in-classes,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-type-reinterpret-cast,
+  -cppcoreguidelines-pro-type-vararg,
+  -cppcoreguidelines-special-member-functions,
+  -misc-include-cleaner,
+  -misc-non-private-member-variables-in-classes,
+  -modernize-avoid-c-arrays,
+  -modernize-return-braced-init-list,
+  -modernize-use-auto,
+  -modernize-use-nodiscard,
+  -modernize-use-trailing-return-type,
+  -performance-enum-size,
+  -performance-inefficient-vector-operation,
+  -readability-braces-around-statements,
+  -readability-convert-member-functions-to-static,
+  -readability-identifier-length,
+  -readability-implicit-bool-conversion,
+  -readability-magic-numbers,
+  -readability-uppercase-literal-suffix
+WarningsAsErrors: '*'
+HeaderFilterRegex: '.*/src/.*'
