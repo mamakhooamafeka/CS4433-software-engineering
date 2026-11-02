@@ -5,6 +5,13 @@ A console Learning Management System for a secondary school: assignments, submis
 - C++17, CMake, SQLite 3, libsodium (Argon2id), Catch2
 - Layered architecture: presentation, services, domain, data access and infrastructure
 
+## Final submission
+
+- **Final report:** [report/Final_Report_Mafeka_202321161.pdf](report/Final_Report_Mafeka_202321161.pdf) (Word version: [.docx](report/Final_Report_Mafeka_202321161.docx))
+- **Appendices A to H:** [docs/appendices](docs/appendices/README.md) (traceability matrix, risk register, test results, user manuals, deployment, QA, CR1)
+- **Diagrams D1 to D12:** [docs/diagrams](docs/diagrams/README.md) (planning, use cases, design v1.0 and v1.1, deployment)
+- **Application:** the source code in this repository, and the ready Windows program on the [Releases page](https://github.com/mamakhooamafeka/CS4433-software-engineering/releases/latest) (v1.1.0)
+
 **Build and run:** see [docs/BUILD.md](docs/BUILD.md).
 **Coding standard:** see [docs/CODING_STANDARD.md](docs/CODING_STANDARD.md).
 **Code review and requirement traceability:** see [docs/REVIEW.md](docs/REVIEW.md).
