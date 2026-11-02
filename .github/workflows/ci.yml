@@ -2,7 +2,8 @@
 # Runs on every push and pull request:
 #   1. linux:   build with warnings, run all tests, measure coverage of the business
 #               logic (src/domain + src/services) and fail if it is below 70% (NFR-12).
-#   2. windows: build with MSVC + vcpkg and run all tests, like on the student laptop.
+#   2. windows: build with MSVC + vcpkg, run all tests, like on the student laptop,
+#               and make the installation package (tools/package-windows.ps1).
 #   3. static-analysis: cppcheck and clang-tidy must report nothing; also saves code metrics.
 name: CI
 
@@ -76,6 +77,16 @@ jobs:
 
       - name: Run all tests
         run: ctest --test-dir build -C Release --output-on-failure
+
+      - name: Make the installation package (checks the release steps on every push)
+        shell: pwsh
+        run: ./tools/package-windows.ps1
+
+      - name: Keep the installation package
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-package
+          path: dist/*.zip
 
   static-analysis:
     name: Static analysis (cppcheck + clang-tidy)

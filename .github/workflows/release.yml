@@ -1,0 +1,56 @@
+# Release pipeline (Phase 7). Runs when a version tag such as v1.0.0 is pushed:
+# builds on Windows, runs every test, makes the installation package with
+# tools/package-windows.ps1 and attaches it to the GitHub Release for that tag.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing tag to package, for example v1.0.0'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  windows-package:
+    name: Windows release package
+    runs-on: windows-latest
+    env:
+      TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+
+      - name: Install libraries with vcpkg
+        run: vcpkg install sqlite3:x64-windows libsodium:x64-windows catch2:x64-windows
+
+      - name: Configure
+        shell: pwsh
+        run: |
+          $tc = "$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
+          cmake -S . -B build "-DCMAKE_TOOLCHAIN_FILE=$tc"
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Run all tests (a release is never made from failing code)
+        run: ctest --test-dir build -C Release --output-on-failure
+
+      - name: Make the installation package
+        shell: pwsh
+        run: ./tools/package-windows.ps1 -Version ($env:TAG.TrimStart('v'))
+
+      - name: Attach the package to the GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh release view "$TAG" > /dev/null 2>&1; then
+            gh release create "$TAG" --title "Moderated LMS $TAG" --notes-file docs/RELEASE_NOTES.md
+          fi
+          gh release upload "$TAG" dist/*.zip --clobber

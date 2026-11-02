@@ -18,6 +18,11 @@ First release of the Moderated LMS.
 - CI on Linux and Windows, with cppcheck and clang-tidy.
 - Defects D01 to D16 fixed or accepted (`docs/DEFECT_LOG.md`); static analysis and review findings fixed (`docs/QA_REPORT.md`).
 
+### Deployment
+- Windows installation package `ModeratedLMS-1.0.0-windows-x64.zip` with the Visual C++ runtime included, built and attached to the GitHub Release by `release.yml`.
+- `start-lms.bat` (always uses `C:\lms-data`) and `copy-backups.bat` (daily copy of the backups to a second disk).
+- Deployment diagram, installation guide, a user manual for each role and release notes (`docs/DEPLOYMENT.md`).
+
 ### Known limitations
 - One user at a time on one computer.
 - Times are entered and shown in UTC.
