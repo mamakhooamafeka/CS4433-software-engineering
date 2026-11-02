@@ -56,6 +56,9 @@ public:
     virtual int insert(const Assignment& a) = 0;
     virtual std::vector<Extension> extensionsFor(int assignmentId, int studentId) = 0;
     virtual void insertExtension(const Extension& e) = 0;
+    // CR1: class-wide extensions of one assignment, oldest first.
+    virtual std::vector<ClassExtension> classExtensionsFor(int assignmentId) = 0;
+    virtual void insertClassExtension(const ClassExtension& e) = 0;
 };
 
 class ISubmissionRepository {

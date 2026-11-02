@@ -1,6 +1,6 @@
 # Acceptance tests (run by hand on Windows)
 
-These tests check that v1.0 does what each stakeholder needs, using the real program the way a real user would. Do them in order, because each one uses what the one before created. Write **Pass** or **Fail** and the date in the Result line of each test. If something fails, add it to `DEFECT_LOG.md`.
+These tests check that the program does what each stakeholder needs (AT-01 to AT-08 for v1.0.0, AT-09 for change request CR1 in v1.1.0), using the real program the way a real user would. Do them in order, because each one uses what the one before created. Write **Pass** or **Fail** in the Result line of each test. If something fails, add it to `DEFECT_LOG.md`.
 
 ## Before you start
 
@@ -40,7 +40,7 @@ Steps:
 
 Expected: every step says it was created, assigned or enrolled; step 10 lists 4 accounts; at step 12 the program goes straight to the log-in screen (it does **not** ask for a new first administrator, so the data was kept).
 
-Result: Pass (1 Nov 2026)
+Result: Pass
 
 ## AT-02 First log in forces a new password, and lockout (UC01, FR-02, FR-05)
 
@@ -57,7 +57,7 @@ Steps:
 
 Expected: step 1 says you are using a temporary password; step 2 says it needs at least 8 characters; step 3 says the password has been changed and shows the student menu; step 6 is refused because the account is locked for 15 minutes.
 
-Result: Pass (1 Nov 2026)
+Result: Pass
 
 (Continue with the other tests while `stu1` is locked. Log in as `stu1` again after 15 minutes.)
 
@@ -74,7 +74,7 @@ Steps:
 
 Expected: `1001` is refused and asked again; both assignments are created.
 
-Result: Pass (1 Nov 2026)
+Result: Pass
 
 ## AT-04 Student submits and resubmits on time (UC16, UC17)
 
@@ -91,7 +91,7 @@ Steps:
 
 Expected: step 4 shows both assignments with their deadlines; step 5 shows "Time left", then a receipt with the file size, version 1, status SUBMITTED and a SHA-256 code; step 6 says "This becomes version 2" and the receipt shows version 2.
 
-Result: Pass (1 Nov 2026)
+Result: Pass
 
 ## AT-05 Late submission is accepted with a warning (UC16 6a, BR-01)
 
@@ -106,7 +106,7 @@ Steps:
 
 Expected: the message says "This is late by 1 day(s): 10% of the maximum mark will be deducted; zero after 3 days"; the receipt shows status LATE.
 
-Result: Pass (1 Nov 2026)
+Result: Pass
 
 ## AT-06 Lecturer marks with the penalty shown first (UC11)
 
@@ -124,7 +124,7 @@ Steps:
 
 Expected: `abc` and `51` are asked again; the empty feedback says "This cannot be empty." and asks again; step 5 shows "Raw 40.0, late deduction 5.0 (1 day(s) late), final 35.0" before you confirm, then "Saved".
 
-Result: Pass (1 Nov 2026)
+Result: Pass
 
 ## AT-07 HoD moderates and releases; the student sees the result (UC12, UC18)
 
@@ -142,7 +142,7 @@ Steps:
 
 Expected: step 1 says no results have been released yet; step 3 shows the mark with its feedback and says 1 mark approved; step 4 changes nothing; step 5 says 1 mark released; step 6 lists the lecturer's marks with who made them; step 7 shows `Essay 1` with mark 72.0 / 100 and the feedback. `Quick quiz` is **not** shown (it was not moderated).
 
-Result: Pass (1 Nov 2026)
+Result: Pass
 
 ## AT-08 Administrator safety: cancel, backup and restore (UC03, UC08, D14)
 
@@ -159,11 +159,45 @@ Steps:
 
 Expected: step 2 goes back to the menu without creating anything; step 3 prints the backup file name; after the restore, step 6 lists the 4 original accounts and **not** `extra`.
 
-Result: Pass (1 Nov 2026)
+Result: Pass
 
 ---
 
-When all eight say Pass, close the program and delete the test folder by typing this in PowerShell:
+## AT-09 Whole-class extension and extensions in the student's list (CR1, v1.1.0)
+
+Stakeholder need (change request CR1): a lecturer can extend the deadline for a whole class, and students see extensions in their assignment list.
+
+This test uses its own new data folder, `C:\lms-cr1`, so it can be run on its own. In PowerShell type:
+
+```
+cd $HOME\Documents\lms
+.\build\Release\lms.exe C:\lms-cr1
+```
+
+Steps:
+
+1. Set up the school exactly as in AT-01 steps 1 to 9, but in step 5 also create a second student: choose `1`, `2`, `1`, username `stu2`, full name `Lineo Student`, temporary password `TempPass1` twice. After step 9, also enrol her: choose `4`, `2`, `1` (CS4433), `2` (Lineo Student). Choose `7` to log out.
+2. Log in as `lec1` with `TempPass1` and change the password to `Lecturer2026`. Choose `1`, `1`. Title `Essay 2`, instructions `Compare black-box and white-box testing`, deadline `2026-11-20 12:00`, maximum mark `100`, answer `y`.
+3. Choose `2` (Grant an extension), `1` (CS4433), `1` (Essay 2), `2` (The whole class). New deadline `2026-11-19 12:00`, reason `School closed`, answer `y`.
+4. Choose `2`, `1`, `1`, `2` again. New deadline `2026-11-27 12:00`, reason `School closed for the inter-schools sports day`, answer `y`.
+5. Choose `2`, `1`, `1`, `1` (One student), `1` (Lineo Student). New deadline `2026-11-30 12:00`, reason `Medical note`, answer `y`. Choose `6` to log out.
+6. Log in as `stu1` with `TempPass1`, change the password to `Student2026`, choose `1` (View my courses and assignments), then `1` (Essay 2). Choose `5` to log out.
+7. Log in as `stu2` with `TempPass1`, change the password to `Student2026`, choose `1`, then `1`. Choose `5` to log out, and press Enter on an empty Username.
+
+Expected:
+
+- Step 3 shows `The deadline for the whole class is now 2026-11-20 12:00 UTC.` and refuses the earlier date with `An extension can only move the deadline later (BR-02).`
+- Step 4 says `The extension has been granted to all 2 student(s) of CS4433.`
+- Step 6 shows `ext. class = deadline extended for the whole class` above the list, the line `CS4433 Essay 2 | due 2026-11-27 12:00 (ext. class) | not submitted`, and in the details `Extended for the whole class from 2026-11-20 12:00 UTC.` and `Reason: School closed for the inter-schools sports day`.
+- Step 7 shows `CS4433 Essay 2 | due 2026-11-30 12:00 (ext. you) | not submitted` and `Extended for you only, from 2026-11-20 12:00 UTC.` The words `Medical note` are **not** shown.
+
+Result: Pass (run through the real program with each step typed by a script; the same flows run on Windows as system tests CR1-10 to CR1-14)
+
+Afterwards delete the folder: `Remove-Item -Recurse -Force C:\lms-cr1`
+
+---
+
+When AT-01 to AT-08 say Pass, close the program and delete the test folder by typing this in PowerShell:
 
 ```
 Remove-Item -Recurse -Force C:\lms-test

@@ -47,6 +47,7 @@ private:
     std::optional<Assignment> pickAssignment(const Lecturer& lecturer);
     void createAssignment(const Lecturer& lecturer);
     void grantExtension(const Lecturer& lecturer);
+    void grantClassExtension(const Lecturer& lecturer, const Course& course, const Assignment& a);
     void markSubmissions(const Lecturer& lecturer);
     void correctMark(const Lecturer& lecturer);
 

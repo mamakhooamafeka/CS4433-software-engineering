@@ -62,17 +62,76 @@ void AssignmentService::grantExtension(const Lecturer& lecturer, int assignmentI
     tx.commit();
 }
 
+Assignment AssignmentService::requireAssignment(const Lecturer& lecturer, int assignmentId) {
+    auto assignment = assignments_.findById(assignmentId);
+    if (!assignment) throw ValidationError("There is no assignment with that number.");
+    requireCourseAccess(lecturer, requireCourse(assignment->getCourseId()));
+    return *assignment;
+}
+
+DateTime AssignmentService::classDeadline(const Lecturer& lecturer, int assignmentId) {
+    return deadlines_.classDeadline(requireAssignment(lecturer, assignmentId));
+}
+
+ClassExtensionResult AssignmentService::grantClassExtension(const Lecturer& lecturer,
+                                                            int assignmentId, DateTime newDeadline,
+                                                            const std::string& reason) {
+    const Assignment a = requireAssignment(lecturer, assignmentId);
+    const std::string why = requireText(reason, "The reason", 1, 500);  // C3: mandatory
+    if (submissions_.hasReleased(assignmentId)) {
+        throw BusinessRuleError(
+            "Marks for this assignment are released, so it cannot be extended (BR-06).");
+    }
+    const DateTime oldClassDeadline = deadlines_.classDeadline(a);
+    if (newDeadline <= oldClassDeadline) {
+        throw BusinessRuleError("An extension can only move the deadline later (BR-02).");
+    }
+
+    ClassExtension e;
+    e.assignmentId = assignmentId;
+    e.newDeadline = newDeadline;
+    e.reason = why;
+    e.grantedBy = lecturer.getId();
+    e.grantedAt = clock_.now();
+
+    ClassExtensionResult result;
+    result.studentsInClass = static_cast<int>(users_.studentsOfCourse(a.getCourseId()).size());
+
+    Transaction tx(tx_);
+    assignments_.insertClassExtension(e);
+    // DC-01 for everyone: each student's deadline is now the later of the new class deadline
+    // and their own extension, so a student with a longer extension keeps it.
+    for (Submission& s : submissions_.byAssignmentAndStatus(assignmentId, SubmissionStatus::LATE)) {
+        s.reevaluateLateness(deadlines_.effectiveDeadline(a, s.getStudentId()));
+        if (s.getStatus() == SubmissionStatus::SUBMITTED) {
+            submissions_.save(s);
+            ++result.nowOnTime;
+        }
+    }
+    tx.commit();
+
+    // Marked work is never changed by an extension (DC-02). Count the marks that carry a late
+    // deduction although the work is on time under the new deadline, so the lecturer can
+    // correct them (UC20) or ask the HoD to amend them (UC13).
+    for (const SubmissionStatus st : {SubmissionStatus::MARKED, SubmissionStatus::MODERATED}) {
+        for (const Submission& s : submissions_.byAssignmentAndStatus(assignmentId, st)) {
+            const std::optional<Mark>& m = s.getMark();
+            if (m.has_value() && m->daysLate > 0 &&
+                s.latestVersion().submittedAt <= deadlines_.effectiveDeadline(a, s.getStudentId())) {
+                ++result.markedAndLate;
+            }
+        }
+    }
+    return result;
+}
+
 std::vector<AssignmentView> AssignmentService::listForStudent(const Student& student) {
     std::vector<AssignmentView> out;
     for (const Course& c : courses_.coursesOfStudent(student.getId())) {
         for (const Assignment& a : assignments_.byCourse(c.getId())) {
-            AssignmentView v{a,
-                             c,
-                             deadlines_.effectiveDeadline(a, student.getId()),
-                             false,
-                             std::nullopt,
-                             submissions_.hasReleased(a.getId())};
-            v.hasExtension = v.effectiveDeadline != a.getDeadline();
+            const EffectiveDeadline d = deadlines_.deadlineFor(a, student.getId());
+            AssignmentView v{a,           c,       d.deadline, std::nullopt,
+                             submissions_.hasReleased(a.getId()), d.scope, d.classReason};
             if (auto s = submissions_.find(a.getId(), student.getId())) {
                 v.status = s->getStatus();
             }

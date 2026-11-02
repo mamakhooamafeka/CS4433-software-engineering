@@ -77,7 +77,7 @@ Each release is an **annotated tag** on a commit of `main`, with a GitHub Releas
 | Tag | Content |
 |---|---|
 | `v1.0.0` | First release: all of Phases 4 to 7 (implementation, tests, quality fixes, deployment package and documents) |
-| `v1.1.0` | Planned: change request CR1 (Phase 8) |
+| `v1.1.0` | Change request CR1 (Phase 8): class-wide extensions, extensions shown in the student's list, database migration 1. Branch `feature/cr1-class-extension`, analysis in `docs/CR1_IMPACT_ANALYSIS.md` |
 
 ## 5. Release procedure
 

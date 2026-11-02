@@ -55,6 +55,8 @@ public:
     int insert(const Assignment& a) override;
     std::vector<Extension> extensionsFor(int assignmentId, int studentId) override;
     void insertExtension(const Extension& e) override;
+    std::vector<ClassExtension> classExtensionsFor(int assignmentId) override;
+    void insertClassExtension(const ClassExtension& e) override;
 
 private:
     SqliteDatabase& db_;

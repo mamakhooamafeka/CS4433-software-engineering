@@ -9,6 +9,7 @@ A console Learning Management System for a secondary school: assignments, submis
 **Coding standard:** see [docs/CODING_STANDARD.md](docs/CODING_STANDARD.md).
 **Code review and requirement traceability:** see [docs/REVIEW.md](docs/REVIEW.md).
 **Deployment (Phase 7):** [deployment diagram](docs/DEPLOYMENT.md), [installation guide](docs/INSTALL.md), user manuals for [students](docs/manuals/USER_MANUAL_STUDENT.md), [lecturers](docs/manuals/USER_MANUAL_LECTURER.md), [heads of department](docs/manuals/USER_MANUAL_HEAD_OF_DEPARTMENT.md) and [administrators](docs/manuals/USER_MANUAL_ADMINISTRATOR.md), [release notes](docs/RELEASE_NOTES.md). Download the ready Windows program from the repository's Releases page.
+**Maintenance (Phase 8, release v1.1.0):** [change request CR1: classification, impact analysis and regression tests](docs/CR1_IMPACT_ANALYSIS.md), [updated design diagrams](docs/diagrams/design-v1.1/).
 **Configuration management and QA (Phase 6):** [branching, commits and releases](docs/CONFIG_MANAGEMENT.md), [static analysis, metrics and code review](docs/QA_REPORT.md), [changelog](CHANGELOG.md).
 **Testing (Phase 5):** [test plan](docs/TEST_PLAN.md), [test results and coverage](docs/TEST_RESULTS.md), [defect log](docs/DEFECT_LOG.md), [acceptance tests](docs/ACCEPTANCE_TESTS.md). CI runs every test on Linux and Windows on each push (`.github/workflows/ci.yml`).
 

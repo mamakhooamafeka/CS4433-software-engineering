@@ -3,6 +3,12 @@
 
 namespace lms::data {
 
+// The v1.0.0 tables. Every later change is a numbered migration below.
 inline constexpr const char* kSchemaSql = R"LMSSQL(@LMS_SCHEMA_SQL@)LMSSQL";
+
+// Generated from sql/migrations/. Migration N sets pragma user_version = N.
+inline constexpr const char* kMigrations[] = {
+    R"LMSSQL(@LMS_MIGRATION_1_SQL@)LMSSQL",
+};
 
 } // namespace lms::data

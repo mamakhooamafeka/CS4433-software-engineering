@@ -1,6 +1,6 @@
 # Deployment (Phase 7)
 
-How Moderated LMS v1.0.0 is built, packaged and installed at the school.
+How Moderated LMS is built, packaged and installed at the school (v1.0.0; unchanged in v1.1.0, which only adds the database migration described in `CR1_IMPACT_ANALYSIS.md`).
 
 ![Deployment diagram](diagrams/deployment-diagram.png)
 
@@ -61,4 +61,4 @@ Because the package is made on every push, a broken packaging step is found in t
 | [USER_MANUAL_LECTURER.md](manuals/USER_MANUAL_LECTURER.md) | Lecturers |
 | [USER_MANUAL_HEAD_OF_DEPARTMENT.md](manuals/USER_MANUAL_HEAD_OF_DEPARTMENT.md) | Heads of department |
 | [USER_MANUAL_ADMINISTRATOR.md](manuals/USER_MANUAL_ADMINISTRATOR.md) | Administrator |
-| [RELEASE_NOTES.md](RELEASE_NOTES.md) | Everyone: what v1.0.0 does and its known limitations |
+| [RELEASE_NOTES.md](RELEASE_NOTES.md) | Everyone: what the current version does and its known limitations |

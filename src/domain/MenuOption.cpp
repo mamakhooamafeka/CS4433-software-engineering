@@ -17,7 +17,7 @@ std::string label(MenuOption option) {
         case MenuOption::CREATE_ASSIGNMENT:
             return "Create an assignment";
         case MenuOption::GRANT_EXTENSION:
-            return "Grant a student an extension";
+            return "Grant an extension";
         case MenuOption::MARK_SUBMISSIONS:
             return "Mark submissions";
         case MenuOption::CORRECT_MARK:

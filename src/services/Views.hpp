@@ -15,9 +15,19 @@ struct AssignmentView {
     Assignment assignment;
     Course course;
     DateTime effectiveDeadline;
-    bool hasExtension = false;
     std::optional<SubmissionStatus> status;  // empty = not submitted yet
     bool closed = false;                     // marks released (BR-06)
+    // CR1: which extension, if any, set effectiveDeadline. The reason is shown only for a
+    // class extension; a student's own reason may be private (for example a medical note).
+    ExtensionScope extension = ExtensionScope::NONE;
+    std::string classReason;
+};
+
+// CR1: what a class-wide extension changed, so the lecturer can follow up.
+struct ClassExtensionResult {
+    int studentsInClass = 0;  // active enrolled students who now have the new deadline
+    int nowOnTime = 0;        // LATE submissions that became SUBMITTED (DC-01)
+    int markedAndLate = 0;    // already marked with a late deduction; the mark is not changed
 };
 
 struct SubmissionPreview {

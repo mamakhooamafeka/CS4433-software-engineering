@@ -1,6 +1,6 @@
 # Student manual
 
-Moderated LMS v1.0.0. This manual is for **students**. It shows how to see your assignments, hand in your work, and read your marks.
+Moderated LMS v1.1.0. This manual is for **students**. It shows how to see your assignments, hand in your work, and read your marks.
 
 ## 1. Getting started
 
@@ -75,13 +75,31 @@ Choose:
 1. Choose `1. View my courses and assignments`.
 2. You see every assignment in your courses, with its deadline and what has happened to your work:
    ```
+     ext. class = deadline extended for the whole class
+     ext. you   = deadline extended for you only
+
    My assignments (choose one to see the instructions)
    ---------------------------------------------------
-     1. CS4433 Essay 1 | due YYYY-MM-DD 12:00 (extended) | not submitted
+     1. CS4433 Essay 1 | due YYYY-MM-DD 12:00 (ext. you) | SUBMITTED
+     2. CS4433 Essay 2 | due YYYY-MM-DD 12:00 (ext. class) | not submitted
      0. Back
    ```
-   The deadline shown is **your own** deadline. If your lecturer gave you an extension, it shows the new deadline and the word `(extended)`.
-3. Type the number of an assignment to read its instructions and maximum mark.
+   The deadline shown is **your own** deadline, with any extension already included:
+   - `(ext. class)` means your lecturer gave the whole class more time.
+   - `(ext. you)` means your lecturer gave only you more time.
+   - No mark means the deadline is the one the assignment was set with.
+3. Type the number of an assignment to read its instructions and maximum mark. If the deadline was extended, you also see the original deadline, and for a class extension the lecturer's reason:
+   ```
+   Essay 2
+   -------
+     Course: CS4433 Software Engineering
+     Deadline: YYYY-MM-DD 12:00 UTC
+     Extended for the whole class from YYYY-MM-DD 12:00 UTC.
+     Reason: School closed for the inter-schools sports day
+     Maximum mark: 100
+     Instructions: Compare black-box and white-box testing in 800 words.
+   ```
+   The reason for an extension given only to you is not shown on the screen, because other people may be looking at the same computer.
 
 What the status at the end of each line means:
 
@@ -152,7 +170,7 @@ The late penalty is the same for everyone and is worked out by the program, not 
 | More than 2 days, up to 3 days | 30% of the maximum mark |
 | More than 3 days | The mark becomes 0 |
 
-If you have a good reason for being late (for example illness), talk to your lecturer **before** the deadline. Only the lecturer can give you an extension, and it then shows as `(extended)` in your list.
+If you have a good reason for being late (for example illness), talk to your lecturer **before** the deadline. Only the lecturer can give you an extension, and it then shows as `(ext. you)` in your list. If the whole class gets more time, it shows as `(ext. class)`. If you handed in late but before the new deadline, your work counts as on time.
 
 ## 6. See your marks
 

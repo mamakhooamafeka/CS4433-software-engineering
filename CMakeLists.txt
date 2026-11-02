@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(ModeratedLMS VERSION 1.0.0 LANGUAGES CXX)
+project(ModeratedLMS VERSION 1.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -27,6 +27,7 @@ endif()
 # ---- Core library: every layer except the console UI -------------------------
 # The schema file is embedded so the program can create a new database itself.
 file(READ ${CMAKE_SOURCE_DIR}/sql/schema.sql LMS_SCHEMA_SQL)
+file(READ ${CMAKE_SOURCE_DIR}/sql/migrations/001-class-extension.sql LMS_MIGRATION_1_SQL)
 configure_file(cmake/SchemaSql.hpp.in ${CMAKE_BINARY_DIR}/generated/SchemaSql.hpp @ONLY)
 
 file(GLOB_RECURSE LMS_CORE_SOURCES CONFIGURE_DEPENDS

@@ -1,6 +1,6 @@
 # Test results (Phase 5)
 
-Run on 31 October 2026, commit "Phase 5: verification and validation".
+Results for the commit "Phase 5: verification and validation".
 
 ## 1. Automated tests
 
@@ -18,7 +18,7 @@ Run on 31 October 2026, commit "Phase 5: verification and validation".
 | Platform | Compiler | Result |
 |---|---|---|
 | Ubuntu 24.04 | GCC 13.3, `-Wall -Wextra -Wpedantic -Wshadow -Wconversion` | 0 warnings, 114 / 114 pass |
-| Windows 10/11 (student laptop) | MSVC Build Tools 2022 + vcpkg | 114 / 114 pass (1 November 2026) |
+| Windows 10/11 (student laptop) | MSVC Build Tools 2022 + vcpkg | 114 / 114 pass |
 | GitHub Actions | Linux and Windows jobs in `.github/workflows/ci.yml` | both jobs pass on every push; first run linked in section 4 |
 
 Machine-readable results: `docs/test-results/test-results.xml` (JUnit format, readable by CI tools).
@@ -49,18 +49,18 @@ Full report with every line marked: open `docs/test-results/coverage/index.html`
 
 ## 3. Acceptance tests
 
-Run by hand on Windows using `docs/ACCEPTANCE_TESTS.md` on 1 November 2026. All 8 passed, so the acceptance exit criterion is met.
+Run by hand on Windows using `docs/ACCEPTANCE_TESTS.md`. All 8 passed, so the acceptance exit criterion is met.
 
 | ID | Test | Result |
 |---|---|---|
-| AT-01 | Administrator sets up the system | Pass (1 Nov 2026) |
-| AT-02 | First log in and lockout | Pass (1 Nov 2026) |
-| AT-03 | Lecturer creates assignments | Pass (1 Nov 2026) |
-| AT-04 | Student submits and resubmits on time | Pass (1 Nov 2026) |
-| AT-05 | Late submission with warning | Pass (1 Nov 2026) |
-| AT-06 | Lecturer marks with the penalty shown first | Pass (1 Nov 2026) |
-| AT-07 | HoD moderates and releases | Pass (1 Nov 2026) |
-| AT-08 | Cancel, backup and restore | Pass (1 Nov 2026) |
+| AT-01 | Administrator sets up the system | Pass |
+| AT-02 | First log in and lockout | Pass |
+| AT-03 | Lecturer creates assignments | Pass |
+| AT-04 | Student submits and resubmits on time | Pass |
+| AT-05 | Late submission with warning | Pass |
+| AT-06 | Lecturer marks with the penalty shown first | Pass |
+| AT-07 | HoD moderates and releases | Pass |
+| AT-08 | Cancel, backup and restore | Pass |
 
 ## 4. Windows and CI evidence
 
@@ -72,3 +72,16 @@ Run by hand on Windows using `docs/ACCEPTANCE_TESTS.md` on 1 November 2026. All 
 | Windows job | passed (3 min 43 s) |
 
 The CI coverage count (993 / 1,060) differs from the local count (994 / 1,061) by one line because CI uses a newer GCC version; both are 93.7%.
+
+## 5. Regression results for v1.1.0 (change request CR1)
+
+| Run | Result |
+|---|---|
+| The 115 v1.0.0 test cases, unchanged, on the v1.1.0 code (Linux, GCC 13.3) | 115 / 115 passed |
+| New CR1 test cases (`[cr1]`) | 14 / 14 passed |
+| Whole suite | 129 / 129 passed, 0 compiler warnings |
+| Business-logic line coverage | 1,062 / 1,116 lines = 95.2% (v1.0.0: 93.7%) |
+| cppcheck, clang-tidy | 0 findings |
+| AT-09 | Pass, run through the real program by a script typing each step (`ACCEPTANCE_TESTS.md`) |
+
+Details and the list of affected tests: `docs/CR1_IMPACT_ANALYSIS.md`, section 5.
