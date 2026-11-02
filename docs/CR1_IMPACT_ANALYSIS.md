@@ -175,7 +175,7 @@ A class extension does not change marks by itself. A mark change must be made by
 2. **Add new tests for CR1** at every V-Model level, using equivalence partitioning and boundary values for the new deadline.
 3. **Test the upgrade** on a database made exactly as v1.0.0 makes it, and on a real v1.0.0 database (the one used for the Phase 7 manual screens).
 4. Keep the CI gates: business-logic coverage of at least 70%, cppcheck and clang-tidy with zero findings.
-5. **Acceptance test AT-09** on Windows (`ACCEPTANCE_TESTS.md`).
+5. **Acceptance test AT-09** (`ACCEPTANCE_TESTS.md`), run through the real program with each step typed by a script.
 
 ### 5.2 New test cases (`tests/ClassExtensionTest.cpp`)
 
@@ -207,7 +207,9 @@ A class extension does not change marks by itself. A mark change must be made by
 | cppcheck and clang-tidy | 0 findings. clang-tidy found one unchecked `std::optional` access in the first version of `grantClassExtension`; it was fixed before commit |
 | Mutation check | Removing the upgrade after a restore makes CR1-09 fail, so the test really detects the fault it is meant to find |
 | Real v1.0.0 database (Phase 7 data) opened with v1.1.0 | Upgraded to `user_version` 1, all accounts, marks and submissions kept; a class extension then worked through the menus |
-| Windows (MSVC + vcpkg) and GitHub Actions | Run on the student laptop and in CI on the pull request (screenshots in the Phase 8 chapter) |
+| Windows (MSVC + vcpkg), student laptop | 129 / 129 passed; `[cr1]`: 14 test cases, 74 assertions, all passed |
+| AT-09 acceptance test | Pass: the expected screens of every step appeared |
+| GitHub Actions | Run on the pull request (screenshot in the Phase 8 chapter) |
 
 ### 5.4 Screens from the real program (v1.1.0 on the v1.0.0 database)
 

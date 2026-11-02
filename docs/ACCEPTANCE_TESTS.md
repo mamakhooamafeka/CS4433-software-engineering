@@ -191,7 +191,7 @@ Expected:
 - Step 6 shows `ext. class = deadline extended for the whole class` above the list, the line `CS4433 Essay 2 | due 2026-11-27 12:00 (ext. class) | not submitted`, and in the details `Extended for the whole class from 2026-11-20 12:00 UTC.` and `Reason: School closed for the inter-schools sports day`.
 - Step 7 shows `CS4433 Essay 2 | due 2026-11-30 12:00 (ext. you) | not submitted` and `Extended for you only, from 2026-11-20 12:00 UTC.` The words `Medical note` are **not** shown.
 
-Result: Pass
+Result: Pass (run through the real program with each step typed by a script; the same flows run on Windows as system tests CR1-10 to CR1-14)
 
 Afterwards delete the folder: `Remove-Item -Recurse -Force C:\lms-cr1`
 

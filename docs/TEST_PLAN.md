@@ -215,7 +215,7 @@ The full strategy, the new test cases CR1-01 to CR1-14 and their results are in 
 | Unit, integration, system (regression) | All 115 v1.0.0 test cases, unchanged | 115 / 115 pass on Linux and Windows |
 | Unit, integration, system (new) | `tests/ClassExtensionTest.cpp`, tag `[cr1]` | 14 / 14 pass |
 | Data | Upgrade of a v1.0.0 database and of a v1.0.0 backup (CR1-08, CR1-09) | Data kept, `user_version` = 1 |
-| Acceptance | AT-09 on Windows | Pass |
+| Acceptance | AT-09 through the real program | Pass |
 | Quality gates | Coverage, cppcheck, clang-tidy in CI | At least 70% coverage; 0 findings |
 
 The CR1 tests only: `build\Release\lms_tests.exe "[cr1]"` (Windows) or `./build/lms_tests "[cr1]"` (Linux).
