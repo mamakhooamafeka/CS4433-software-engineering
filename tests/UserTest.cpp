@@ -34,6 +34,9 @@ public:
     int insert(const Assignment&) override { return 0; }
     std::vector<Extension> extensionsFor(int, int) override { return extensions; }
     void insertExtension(const Extension&) override {}
+    std::vector<ClassExtension> classExtensions;
+    std::vector<ClassExtension> classExtensionsFor(int) override { return classExtensions; }
+    void insertClassExtension(const ClassExtension&) override {}
 };
 
 }  // namespace

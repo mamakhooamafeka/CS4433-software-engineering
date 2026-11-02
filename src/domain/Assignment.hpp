@@ -44,7 +44,7 @@ private:
     DateTime createdAt_;
 };
 
-// A later deadline for one student (FR-09). A class-wide extension is CR1, not v1.0.
+// A later deadline for one student (FR-09).
 struct Extension {
     int id = 0;
     int assignmentId = 0;
@@ -53,6 +53,26 @@ struct Extension {
     std::string reason;
     int grantedBy = 0;
     DateTime grantedAt;
+};
+
+// CR1 (v1.1, FR-24): a later deadline for every student of the course, including students
+// enrolled after it was granted. Kept apart from Extension so neither has a nullable student.
+struct ClassExtension {
+    int id = 0;
+    int assignmentId = 0;
+    DateTime newDeadline;
+    std::string reason;
+    int grantedBy = 0;
+    DateTime grantedAt;
+};
+
+// Where a student's deadline comes from (CR1: shown on the student's assignment list).
+enum class ExtensionScope { NONE, CLASS, STUDENT };
+
+struct EffectiveDeadline {
+    DateTime deadline;                            // the deadline in force for this student
+    ExtensionScope scope = ExtensionScope::NONE;  // which extension set it, if any
+    std::string classReason;                      // reason of the class extension in force
 };
 
 }  // namespace lms

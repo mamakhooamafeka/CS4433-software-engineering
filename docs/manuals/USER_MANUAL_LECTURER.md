@@ -1,6 +1,6 @@
 # Lecturer manual
 
-Moderated LMS v1.0.0. This manual is for **lecturers**. It shows how to set assignments, give extensions, mark work and correct a mark.
+Moderated LMS v1.1.0. This manual is for **lecturers**. It shows how to set assignments, give extensions, mark work and correct a mark.
 
 ## 1. Getting started
 
@@ -61,7 +61,7 @@ Main menu: Mr Lecturer (LECTURER)
 ---------------------------------
   You have 1 submission(s) to mark.
   1. Create an assignment
-  2. Grant a student an extension
+  2. Grant an extension
   3. Mark submissions
   4. Correct a mark
   5. Change my password
@@ -87,22 +87,55 @@ The line above the options shows how many submissions in your courses are waitin
    ```
 3. Check the summary line and type `y`. Every student enrolled in the course can see the assignment straight away.
 
-## 4. Give one student an extension
+## 4. Give an extension
+
+An extension gives more time. You can give it to **one student** (for example after an illness) or to **the whole class** (for example when the school was closed). An extension can only make a deadline later, never earlier, and it always needs a reason.
+
+### 4.1 One student
 
 Use this when a student has a good reason, such as illness. The extension is only for that student; the deadline stays the same for everyone else.
 
-1. Choose `2. Grant a student an extension`.
-2. Choose the course, the assignment and the student.
-3. Type the new deadline (UTC) and the reason. The new deadline must be later than the deadline the student has now.
+1. Choose `2. Grant an extension`.
+2. Choose the course and the assignment.
+3. At `Who gets the extension?` choose `1. One student`, then choose the student.
+4. Type the new deadline (UTC) and the reason. The new deadline must be later than the deadline the student has now.
    ```
    New deadline (YYYY-MM-DD HH:MM, UTC): YYYY-MM-DD 12:00
    Reason: Was ill, doctor's note seen
    Extend "Essay 1" for Thabo Student to YYYY-MM-DD 12:00? (y/n): y
      The extension has been granted.
    ```
-4. The student now sees the new deadline with the word `(extended)`. If the student already handed in late, the program works out again whether the work is late using the new deadline. Work that is already marked cannot be given an extension.
+5. The student now sees the new deadline marked `(ext. you)`. The reason is **not** shown to the student, because it may be private. If the student already handed in late, the program works out again whether the work is late using the new deadline. Work that is already marked cannot be given an extension.
 
-An extension for a whole class is not possible in this version. It is planned for v1.1.0.
+### 4.2 The whole class
+
+Use this when the deadline has to move for everyone, for example when the school was closed, or when you typed the wrong deadline when you created the assignment.
+
+1. Choose `2. Grant an extension`.
+2. Choose the course and the assignment.
+3. At `Who gets the extension?` choose `2. The whole class`. The program shows the deadline the class has now.
+4. Type the new deadline (UTC) and the reason. **Every student in the class sees this reason**, so write it for them.
+   ```
+   Who gets the extension?
+   -----------------------
+     1. One student
+     2. The whole class
+     0. Back
+   Choose: 2
+     The deadline for the whole class is now YYYY-MM-DD 12:00 UTC.
+   New deadline (YYYY-MM-DD HH:MM, UTC): YYYY-MM-DD 12:00
+   Reason (the students will see it): School closed for the inter-schools sports day
+   Extend "Essay 2" for the whole class of CS4433 to YYYY-MM-DD 12:00? (y/n): y
+     The extension has been granted to all 1 student(s) of CS4433.
+   ```
+5. Every student of the course, including students enrolled later, now sees the new deadline marked `(ext. class)`, with your reason.
+
+What else happens:
+
+- Work that was handed in late, but before the new deadline, is now on time. The program says how many: `2 late submission(s) are now on time.`
+- A student who already has a **longer** extension of their own keeps it.
+- Work that you have **already marked** keeps its mark. If such a mark has a late deduction that is no longer fair, the program tells you how many, for example `1 marked submission(s) still have a late deduction although they are on time now.` Correct those marks with `4. Correct a mark` (section 6): the program works the deduction out again with the new deadline. If the head of department has already moderated the mark, ask them to amend it.
+- After the head of department has released the marks of an assignment, it cannot be extended any more.
 
 ## 5. Mark submissions
 
@@ -154,6 +187,8 @@ After moderation, only the head of department can change a mark. Ask them if a m
 |---|---|
 | My course is not in the list | The administrator has not assigned you to it yet |
 | A student is not in the list for an extension | The student is not enrolled in the course. Ask the administrator |
-| The deadline is 2 hours wrong | You typed Lesotho time instead of UTC. This version cannot change the deadline for the whole class, so give each student an extension (section 4). Changing it for a whole class comes in v1.1.0 |
+| The deadline is too early (for example 2 hours wrong because you typed Lesotho time instead of UTC) | Give the whole class an extension to the right time (section 4.2) |
+| `An extension can only move the deadline later (BR-02).` | The new deadline must be later than the deadline in force now. A deadline cannot be made earlier |
+| `Marks for this assignment are released, so it cannot be extended (BR-06).` | The assignment is closed. Nothing can be handed in any more |
 | The submission I want to correct is not in the list | It is already moderated, or not marked yet. Ask the head of department |
 | I forgot my password, or my account is locked | Wait 15 minutes if it is locked, or ask the administrator to reset it |

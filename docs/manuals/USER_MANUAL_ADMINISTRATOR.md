@@ -1,6 +1,6 @@
 # Administrator manual
 
-Moderated LMS v1.0.0. This manual is for the **administrator**. It shows how to create accounts, set up departments and courses, enrol students, reset passwords, and make and restore backups. The technician installs the program first (`INSTALL.md`).
+Moderated LMS v1.1.0. This manual is for the **administrator**. It shows how to create accounts, set up departments and courses, enrol students, reset passwords, and make and restore backups. The technician installs the program first (`INSTALL.md`).
 
 ## 1. Getting started
 

@@ -70,4 +70,32 @@ void SqliteAssignmentRepository::insertExtension(const Extension& e) {
     s.run();
 }
 
+std::vector<ClassExtension> SqliteAssignmentRepository::classExtensionsFor(int assignmentId) {
+    Statement s = db_.prepare(
+        "select id, assignment_id, new_deadline, reason, granted_by, granted_at "
+        "from class_extension where assignment_id = ? order by granted_at, id");
+    s.bind(1, assignmentId);
+    std::vector<ClassExtension> out;
+    while (s.step()) {
+        ClassExtension e;
+        e.id = s.getInt(0);
+        e.assignmentId = s.getInt(1);
+        e.newDeadline = s.getDateTime(2);
+        e.reason = s.getText(3);
+        e.grantedBy = s.getInt(4);
+        e.grantedAt = s.getDateTime(5);
+        out.push_back(e);
+    }
+    return out;
+}
+
+void SqliteAssignmentRepository::insertClassExtension(const ClassExtension& e) {
+    Statement s = db_.prepare(
+        "insert into class_extension (assignment_id, new_deadline, reason, granted_by, "
+        "granted_at) values (?, ?, ?, ?, ?)");
+    s.bind(1, e.assignmentId).bind(2, e.newDeadline).bind(3, e.reason).bind(4, e.grantedBy);
+    s.bind(5, e.grantedAt);
+    s.run();
+}
+
 }  // namespace lms

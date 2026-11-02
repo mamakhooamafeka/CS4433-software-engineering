@@ -73,7 +73,7 @@ void LecturerMenu::createAssignment(const Lecturer& lecturer) {
     io_.info("The assignment has been created. Enrolled students can see it now.");
 }
 
-// UC10 (FR-09, BR-02, DC-01, DC-02).
+// UC10 (FR-09, FR-24, BR-02, DC-01, DC-02). CR1 added the choice of the whole class.
 void LecturerMenu::grantExtension(const Lecturer& lecturer) {
     const auto course = pickCourse(lecturer);
     if (!course) return;
@@ -85,6 +85,13 @@ void LecturerMenu::grantExtension(const Lecturer& lecturer) {
     const int pickA = io_.choose("Choose an assignment", items);
     if (pickA < 0) return;
     const Assignment& a = list[static_cast<std::size_t>(pickA)];
+
+    const int who = io_.choose("Who gets the extension?", {"One student", "The whole class"});
+    if (who < 0) return;
+    if (who == 1) {
+        grantClassExtension(lecturer, *course, a);
+        return;
+    }
 
     const auto students = assignments_.studentsOf(lecturer, course->getId());
     items.clear();
@@ -101,6 +108,31 @@ void LecturerMenu::grantExtension(const Lecturer& lecturer) {
     }
     assignments_.grantExtension(lecturer, a.getId(), s.id, newDeadline, reason);
     io_.info("The extension has been granted.");
+}
+
+// CR1 (FR-24): one new deadline for every student of the course.
+void LecturerMenu::grantClassExtension(const Lecturer& lecturer, const Course& course,
+                                       const Assignment& a) {
+    io_.info("The deadline for the whole class is now " +
+             showTime(assignments_.classDeadline(lecturer, a.getId())) + " UTC.");
+    const DateTime newDeadline = io_.readDateTime("New deadline (YYYY-MM-DD HH:MM, UTC): ");
+    const std::string reason = io_.readText("Reason (the students will see it): ", 500);
+    if (!io_.confirm("Extend \"" + a.getTitle() + "\" for the whole class of " + course.getCode() +
+                     " to " + showTime(newDeadline) + "?")) {
+        return;
+    }
+    const ClassExtensionResult r =
+        assignments_.grantClassExtension(lecturer, a.getId(), newDeadline, reason);
+    io_.info("The extension has been granted to all " + std::to_string(r.studentsInClass) +
+             " student(s) of " + course.getCode() + ".");
+    if (r.nowOnTime > 0) {
+        io_.info(std::to_string(r.nowOnTime) + " late submission(s) are now on time.");
+    }
+    if (r.markedAndLate > 0) {
+        io_.info(std::to_string(r.markedAndLate) +
+                 " marked submission(s) still have a late deduction although they are on time "
+                 "now. Correct them with \"Correct a mark\", or ask the HoD if already moderated.");
+    }
 }
 
 // UC11 (FR-13): the late penalty is worked out by the service, not typed in.

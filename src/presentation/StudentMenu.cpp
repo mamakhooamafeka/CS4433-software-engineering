@@ -81,21 +81,57 @@ void StudentMenu::handle(User& user, MenuOption option) {
     }
 }
 
-// UC15 (FR-10): the deadline shown is the student's own, including any extension.
+namespace {
+
+// CR1: the list says whether the deadline was extended, and for whom. The tags are short
+// so a list line still fits in 80 columns (NFR-11); extensionKey() explains them.
+std::string extensionTag(const AssignmentView& v) {
+    switch (v.extension) {
+        case ExtensionScope::CLASS:
+            return " (ext. class)";
+        case ExtensionScope::STUDENT:
+            return " (ext. you)";
+        case ExtensionScope::NONE:
+            break;
+    }
+    return "";
+}
+
+// Printed above a list that has at least one extended deadline.
+void extensionKey(ConsoleIO& io, const std::vector<AssignmentView>& list) {
+    for (const AssignmentView& v : list) {
+        if (v.extension != ExtensionScope::NONE) {
+            io.info("ext. class = deadline extended for the whole class");
+            io.info("ext. you   = deadline extended for you only");
+            return;
+        }
+    }
+}
+
+}  // namespace
+
+// UC15 (FR-10, CR1): the deadline shown is the student's own, including any extension.
 void StudentMenu::viewAssignments(const Student& student) {
     const auto list = assignments_.listForStudent(student);
     std::vector<std::string> items;
     for (const AssignmentView& v : list) {
         items.push_back(v.course.getCode() + " " + v.assignment.getTitle() + " | due " +
-                        showTime(v.effectiveDeadline) + (v.hasExtension ? " (extended)" : "") +
-                        " | " + statusText(v));
+                        showTime(v.effectiveDeadline) + extensionTag(v) + " | " + statusText(v));
     }
+    extensionKey(io_, list);
     const int pick = io_.choose("My assignments (choose one to see the instructions)", items);
     if (pick < 0) return;
     const AssignmentView& v = list[static_cast<std::size_t>(pick)];
     io_.heading(v.assignment.getTitle());
     io_.info("Course: " + v.course.getCode() + " " + v.course.getTitle());
     io_.info("Deadline: " + showTime(v.effectiveDeadline) + " UTC");
+    if (v.extension == ExtensionScope::CLASS) {
+        io_.info("Extended for the whole class from " + showTime(v.assignment.getDeadline()) +
+                 " UTC.");
+        io_.info("Reason: " + v.classReason);
+    } else if (v.extension == ExtensionScope::STUDENT) {
+        io_.info("Extended for you only, from " + showTime(v.assignment.getDeadline()) + " UTC.");
+    }
     io_.info("Maximum mark: " + std::to_string(v.assignment.getMaxMark()));
     io_.info("Instructions: " + v.assignment.getInstructions());
 }
@@ -106,8 +142,9 @@ void StudentMenu::submit(const Student& student) {
     std::vector<std::string> items;
     for (const AssignmentView& v : list) {
         items.push_back(v.course.getCode() + " " + v.assignment.getTitle() + " | due " +
-                        showTime(v.effectiveDeadline) + " | " + statusText(v));
+                        showTime(v.effectiveDeadline) + extensionTag(v) + " | " + statusText(v));
     }
+    extensionKey(io_, list);
     const int pick = io_.choose("Submit an assignment", items);
     if (pick < 0) return;
     const int assignmentId = list[static_cast<std::size_t>(pick)].assignment.getId();

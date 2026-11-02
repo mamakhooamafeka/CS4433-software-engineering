@@ -65,7 +65,7 @@ int run(const fs::path& dataDir) {
     BackupService backup(db, files, clock, (dataDir / "backups").string());
 
     ConsoleIO io;
-    io.line("Moderated LMS v1.0. All times are UTC.");
+    io.line("Moderated LMS v1.1. All times are UTC.");
     try {
         if (backup.backupIfFirstStartToday()) io.info("Today's backup has been made.");
     } catch (const LmsError& e) {

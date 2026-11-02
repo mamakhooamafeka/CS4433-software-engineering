@@ -1,6 +1,6 @@
 # Installation guide for the school technician
 
-Moderated LMS v1.0.0 for Windows. This guide shows how to install the program on the school office computer, how to set up the daily backup copy, and how to check that everything works. You do not need to know programming. Every step says exactly what to click or type.
+Moderated LMS v1.1.0 for Windows. This guide shows how to install the program on the school office computer, how to set up the daily backup copy, and how to check that everything works. You do not need to know programming. Every step says exactly what to click or type.
 
 Where things go after installation:
 
@@ -35,7 +35,7 @@ To check the Windows version: press the Windows key, type `about`, open **About 
 Do this on any computer that has internet.
 
 1. Open https://github.com/mamakhooamafeka/CS4433-software-engineering/releases in a web browser.
-2. Under **Moderated LMS v1.0.0**, open **Assets** and click `ModeratedLMS-1.0.0-windows-x64.zip`. The file is saved to the Downloads folder.
+2. Under **Moderated LMS v1.1.0**, open **Assets** and click `ModeratedLMS-1.1.0-windows-x64.zip`. The file is saved to the Downloads folder.
 3. Copy the zip file to the USB flash drive and take it to the school office computer.
 
 ---
@@ -44,9 +44,9 @@ Do this on any computer that has internet.
 
 On the school office computer:
 
-1. Plug in the USB flash drive and copy `ModeratedLMS-1.0.0-windows-x64.zip` to the Desktop.
+1. Plug in the USB flash drive and copy `ModeratedLMS-1.1.0-windows-x64.zip` to the Desktop.
 2. Right-click the zip file and choose **Extract All...**.
-3. In the box **Files will be extracted to this folder**, type `C:\` and click **Extract**. This makes the folder `C:\ModeratedLMS-1.0.0-windows-x64`.
+3. In the box **Files will be extracted to this folder**, type `C:\` and click **Extract**. This makes the folder `C:\ModeratedLMS-1.1.0-windows-x64`.
 4. Rename that folder to `ModeratedLMS`: open **This PC > Local Disk (C:)**, right-click the folder, choose **Rename**, type `ModeratedLMS` and press Enter.
 5. Open `C:\ModeratedLMS`. It must contain:
 
@@ -91,7 +91,7 @@ Do this together with the school administrator, because they choose the administ
 
 1. Double-click **Moderated LMS** on the Desktop. A black window opens with:
    ```
-   Moderated LMS v1.0. All times are UTC.
+   Moderated LMS v1.1. All times are UTC.
      Today's backup has been made.
 
    First start: create the administrator account
@@ -181,6 +181,8 @@ Tick each check. All must pass before the system is used for real work.
 4. Rename `C:\ModeratedLMS` to `C:\ModeratedLMS-old`.
 5. Install the new version into `C:\ModeratedLMS` (steps 2 and 3). Do not touch `C:\lms-data`.
 6. Start the program and log in. If it works, delete `C:\ModeratedLMS-old`. If not, rename the folders back and contact support.
+
+The first time a new version starts, it upgrades the database in `C:\lms-data` by itself if the new version needs new tables (v1.1.0 adds the table for class extensions). The upgrade keeps all data and happens in one step: if the power fails during it, the database stays as it was and the upgrade runs again at the next start. An older version should not be used again on an upgraded database; to go back, restore the backup made in step 2. A backup from an older version can be restored in the new version: it is upgraded in the same way.
 
 ---
 

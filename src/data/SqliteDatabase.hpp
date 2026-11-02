@@ -87,6 +87,7 @@ public:
     // Copies the whole database to another file with SQLite's online backup API (FR-21).
     void backupTo(const std::string& path) override;
     // Replaces the open database with a backup copy (FR-21). The backup is checked first.
+    // A backup made by an older release is upgraded after it is restored.
     void restoreFrom(const std::string& path) override;
 
     void begin() override;
@@ -96,6 +97,8 @@ public:
 private:
     void exec(const std::string& sql);
     void createSchemaIfNew();
+    // Brings a database made by an older release up to date (v1.1: migration 1, CR1).
+    void upgradeSchema();
 
     sqlite3* handle_ = nullptr;
 };

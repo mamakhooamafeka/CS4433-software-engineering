@@ -9,9 +9,8 @@ std::vector<AssignmentView> SubmissionService::listOpenAssignments(const Student
     for (const Course& c : courses_.coursesOfStudent(student.getId())) {
         for (const Assignment& a : assignments_.byCourse(c.getId())) {
             if (submissions_.hasReleased(a.getId())) continue;
-            AssignmentView v{
-                a, c, deadlines_.effectiveDeadline(a, student.getId()), false, std::nullopt, false};
-            v.hasExtension = v.effectiveDeadline != a.getDeadline();
+            const EffectiveDeadline d = deadlines_.deadlineFor(a, student.getId());
+            AssignmentView v{a, c, d.deadline, std::nullopt, false, d.scope, d.classReason};
             if (auto s = submissions_.find(a.getId(), student.getId())) v.status = s->getStatus();
             out.push_back(v);
         }

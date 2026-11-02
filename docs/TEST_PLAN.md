@@ -205,3 +205,17 @@ ctest --test-dir build -C Release --output-on-failure
 ```
 
 One group only, for example the system tests: `build\Release\lms_tests.exe "[system]"` (Windows) or `./build/lms_tests "[system]"` (Linux).
+
+## 10. Regression testing for change request CR1 (v1.1.0)
+
+The full strategy, the new test cases CR1-01 to CR1-14 and their results are in `docs/CR1_IMPACT_ANALYSIS.md`, section 5. In short:
+
+| Level | What is run | Exit criterion |
+|---|---|---|
+| Unit, integration, system (regression) | All 115 v1.0.0 test cases, unchanged | 115 / 115 pass on Linux and Windows |
+| Unit, integration, system (new) | `tests/ClassExtensionTest.cpp`, tag `[cr1]` | 14 / 14 pass |
+| Data | Upgrade of a v1.0.0 database and of a v1.0.0 backup (CR1-08, CR1-09) | Data kept, `user_version` = 1 |
+| Acceptance | AT-09 on Windows | Pass |
+| Quality gates | Coverage, cppcheck, clang-tidy in CI | At least 70% coverage; 0 findings |
+
+The CR1 tests only: `build\Release\lms_tests.exe "[cr1]"` (Windows) or `./build/lms_tests "[cr1]"` (Linux).

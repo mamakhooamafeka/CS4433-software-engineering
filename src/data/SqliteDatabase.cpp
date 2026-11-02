@@ -3,6 +3,7 @@
 #include "SchemaSql.hpp"
 #include "infrastructure/ErrorLog.hpp"
 
+#include <iterator>
 #include <sqlite3.h>
 
 namespace lms {
@@ -148,6 +149,7 @@ SqliteDatabase::SqliteDatabase(const std::string& path) {
     exec("pragma foreign_keys = on;");
     exec("pragma synchronous = full;");  // NFR-05: survive a power loss during a write
     createSchemaIfNew();
+    upgradeSchema();
 }
 
 SqliteDatabase::~SqliteDatabase() {
@@ -169,6 +171,25 @@ void SqliteDatabase::createSchemaIfNew() {
     s.step();
     if (s.getInt(0) == 0) {
         exec(data::kSchemaSql);
+    }
+}
+
+void SqliteDatabase::upgradeSchema() {
+    Statement s = prepare("pragma user_version");
+    s.step();
+    const int current = s.getInt(0);
+    const int latest = static_cast<int>(std::size(data::kMigrations));
+    for (int n = current; n < latest; ++n) {
+        // Each migration runs in its own transaction, so a power cut leaves either the old
+        // or the new version, never half of a migration (NFR-05).
+        exec("begin immediate;");
+        try {
+            exec(data::kMigrations[n]);
+            exec("commit;");
+        } catch (...) {
+            exec("rollback;");
+            throw;
+        }
     }
 }
 
@@ -226,6 +247,7 @@ void SqliteDatabase::restoreFrom(const std::string& path) {
     if (rc != SQLITE_DONE) {
         throwSqliteError(handle_, rc, "restore");
     }
+    upgradeSchema();  // a backup from v1.0.0 has no class_extension table yet
 }
 
 void SqliteDatabase::begin() {

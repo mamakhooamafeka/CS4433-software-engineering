@@ -1,6 +1,6 @@
 # Head of department manual
 
-Moderated LMS v1.0.0. This manual is for the **head of department** (HoD). It shows how to check (moderate) the marks in your department, change a mark when needed, release marks to students, and read the audit log.
+Moderated LMS v1.1.0. This manual is for the **head of department** (HoD). It shows how to check (moderate) the marks in your department, change a mark when needed, release marks to students, and read the audit log.
 
 ## 1. Getting started
 

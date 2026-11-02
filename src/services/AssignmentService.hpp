@@ -1,5 +1,5 @@
 // UC09 Create assignment, UC10 Grant extension and UC15 View assignments
-// (FR-08, FR-09, FR-10).
+// (FR-08, FR-09, FR-10, and FR-24 from change request CR1 in v1.1).
 #pragma once
 
 #include "domain/DeadlineCalculator.hpp"
@@ -33,6 +33,15 @@ public:
     void grantExtension(const Lecturer& lecturer, int assignmentId, int studentId,
                         DateTime newDeadline, const std::string& reason);
 
+    // CR1 (FR-24): one later deadline for the whole class. It must be later than the current
+    // class deadline (BR-02) and is refused once marks are released (BR-06). LATE submissions
+    // are re-evaluated; marked work keeps its mark and is counted for the lecturer instead.
+    ClassExtensionResult grantClassExtension(const Lecturer& lecturer, int assignmentId,
+                                             DateTime newDeadline, const std::string& reason);
+
+    // CR1: the class deadline in force now, shown before the lecturer types a new one.
+    DateTime classDeadline(const Lecturer& lecturer, int assignmentId);
+
     std::vector<AssignmentView> listForStudent(const Student& student);
     std::vector<Course> coursesOf(const Lecturer& lecturer);
     std::vector<Assignment> assignmentsOf(const User& user, int courseId);
@@ -40,6 +49,7 @@ public:
 
 private:
     Course requireCourse(int courseId);
+    Assignment requireAssignment(const Lecturer& lecturer, int assignmentId);
 
     IAssignmentRepository& assignments_;
     ICourseRepository& courses_;
