@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake g++ libsqlite3-dev libsodium-dev
+          sudo apt-get install -y cmake g++ libsqlite3-dev libsodium-dev catch2
           pip install gcovr==8.2
 
       - name: Configure (coverage build)
@@ -36,10 +36,13 @@ jobs:
       - name: Coverage of business logic (must be at least 70%)
         run: |
           mkdir -p coverage
+          # Catch2 comes from apt, so only our own code is built with coverage;
+          # build/_deps is skipped in case CMake ever downloads Catch2 instead.
           gcovr -r . --filter 'src/domain/' --filter 'src/services/' \
+                --exclude-directories 'build/_deps' \
                 --html-details coverage/index.html --txt coverage/business-logic.txt \
                 --fail-under-line 70 build
-          gcovr -r . --filter 'src/' --txt coverage/all-src.txt build
+          gcovr -r . --filter 'src/' --exclude-directories 'build/_deps' --txt coverage/all-src.txt build
           cat coverage/business-logic.txt
           echo "### Line coverage (business logic)" >> "$GITHUB_STEP_SUMMARY"
           tail -2 coverage/business-logic.txt | head -1 >> "$GITHUB_STEP_SUMMARY"
