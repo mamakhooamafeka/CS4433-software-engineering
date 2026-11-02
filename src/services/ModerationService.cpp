@@ -47,7 +47,7 @@ std::vector<SubmissionView> ModerationService::listWithStatus(
     std::initializer_list<SubmissionStatus> statuses) {
     requireAssignment(hod, assignmentId);
     std::vector<SubmissionView> out;
-    for (SubmissionStatus st : statuses) {
+    for (const SubmissionStatus st : statuses) {
         for (const Submission& s : submissions_.byAssignmentAndStatus(assignmentId, st)) {
             SubmissionView v;
             v.submissionId = s.getId();
@@ -84,7 +84,7 @@ void ModerationService::approve(const HeadOfDepartment& hod,
                                 const std::vector<int>& submissionIds) {
     requireDepartment(hod);
     Transaction tx(tx_);
-    for (int id : submissionIds) {
+    for (const int id : submissionIds) {
         auto s = submissions_.findById(id);
         if (!s) throw ValidationError("There is no submission number " + std::to_string(id) + ".");
         requireAssignment(hod, s->getAssignmentId());
@@ -125,7 +125,7 @@ ReleasePreview ModerationService::releasePreview(const HeadOfDepartment& hod, in
     p.assignmentTitle = a.getTitle();
     p.toRelease = static_cast<int>(
         submissions_.byAssignmentAndStatus(assignmentId, SubmissionStatus::MODERATED).size());
-    for (SubmissionStatus st :
+    for (const SubmissionStatus st :
          {SubmissionStatus::SUBMITTED, SubmissionStatus::LATE, SubmissionStatus::MARKED}) {
         p.notReady += static_cast<int>(submissions_.byAssignmentAndStatus(assignmentId, st).size());
     }

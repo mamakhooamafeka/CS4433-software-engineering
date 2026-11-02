@@ -2,7 +2,6 @@
 // of the database and of every submitted file.
 #pragma once
 
-#include "data/SqliteDatabase.hpp"
 #include "domain/Infrastructure.hpp"
 #include "domain/User.hpp"
 
@@ -13,7 +12,7 @@ namespace lms {
 
 class BackupService {
 public:
-    BackupService(SqliteDatabase& db, IFileStore& files, IClock& clock, std::string backupRoot)
+    BackupService(IDatabaseBackup& db, IFileStore& files, IClock& clock, std::string backupRoot)
         : db_(db), files_(files), clock_(clock), backupRoot_(std::move(backupRoot)) {}
 
     // Called at start-up: makes one backup per calendar day (UTC). Returns true if it did.
@@ -25,7 +24,7 @@ public:
     void restore(const User& admin, const std::string& backupName);
 
 private:
-    SqliteDatabase& db_;
+    IDatabaseBackup& db_;
     IFileStore& files_;
     IClock& clock_;
     std::string backupRoot_;

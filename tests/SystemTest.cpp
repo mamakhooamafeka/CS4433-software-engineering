@@ -390,3 +390,20 @@ TEST_CASE("ST-27 UC03: pressing Enter on an empty username cancels account creat
     menu.run(*admin);
     CHECK(s.admin.listUsers(*admin).size() == before);  // both attempts cancelled
 }
+
+TEST_CASE("FR-23 pending work counts for each role (found in the Phase 6 code review)",
+          "[integration][fr23]") {
+    Sys s;
+    auto admin = s.users.findById(s.addUser(Role::ADMIN, "admin"));
+    CHECK(s.auth.pendingWorkCount(s.student(s.stuId)) == 1);  // one assignment to submit
+    CHECK(s.auth.pendingWorkCount(s.lecturer()) == 0);
+    s.submit.submit(s.student(s.stuId), s.asgId, s.makeFile("a.txt", 5));
+    CHECK(s.auth.pendingWorkCount(s.student(s.stuId)) == 0);
+    CHECK(s.auth.pendingWorkCount(s.lecturer()) == 1);  // one to mark
+    CHECK(s.auth.pendingWorkCount(s.hod(s.hodId)) == 0);
+    s.marking.mark(s.lecturer(), s.submissions.find(s.asgId, s.stuId)->getId(), 50, "OK");
+    CHECK(s.auth.pendingWorkCount(s.lecturer()) == 0);
+    CHECK(s.auth.pendingWorkCount(s.hod(s.hodId)) == 1);  // one to moderate
+    CHECK(s.auth.pendingWorkCount(s.hod(s.otherHodId)) == 0);
+    CHECK(s.auth.pendingWorkCount(*admin) == 0);
+}

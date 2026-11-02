@@ -38,6 +38,15 @@ public:
     virtual void restoreFrom(const std::string& sourceDir) = 0;
 };
 
+// Copy and restore of the whole database (FR-21). Declared here so that BackupService
+// depends on this interface, not on the SQLite class in the data layer.
+class IDatabaseBackup {
+public:
+    virtual ~IDatabaseBackup() = default;
+    virtual void backupTo(const std::string& path) = 0;
+    virtual void restoreFrom(const std::string& path) = 0;
+};
+
 class IClock {
 public:
     virtual ~IClock() = default;

@@ -61,5 +61,7 @@ Everything is in `namespace lms`.
 - Tag tests by V-Model level: `[unit]`, `[integration]`, `[system]`.
 
 ## 11. Git
+Branching, commit, tagging and release rules: see [CONFIG_MANAGEMENT.md](CONFIG_MANAGEMENT.md).
+
 - Commit messages: short imperative summary (≤ 72 characters), e.g. `Add Argon2id password hashing`.
 - One logical change per commit. `main` must always build and pass the tests.

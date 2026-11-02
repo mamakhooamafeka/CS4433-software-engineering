@@ -5,6 +5,7 @@
 
 #include "domain/DateTime.hpp"
 #include "domain/Errors.hpp"
+#include "domain/Infrastructure.hpp"
 #include "domain/Repositories.hpp"
 
 #include <cstdint>
@@ -69,7 +70,7 @@ private:
     sqlite3_stmt* stmt_ = nullptr;
 };
 
-class SqliteDatabase : public ITransactionManager {
+class SqliteDatabase : public ITransactionManager, public IDatabaseBackup {
 public:
     // Opens (or creates) the database file, switches on foreign keys and creates
     // the schema on first use. ":memory:" gives a private in-memory database for tests.
@@ -77,14 +78,16 @@ public:
     ~SqliteDatabase() override;
     SqliteDatabase(const SqliteDatabase&) = delete;
     SqliteDatabase& operator=(const SqliteDatabase&) = delete;
+    SqliteDatabase(SqliteDatabase&&) = delete;
+    SqliteDatabase& operator=(SqliteDatabase&&) = delete;
 
     Statement prepare(const std::string& sql);
     std::int64_t lastInsertId() const;
     bool integrityCheck();
     // Copies the whole database to another file with SQLite's online backup API (FR-21).
-    void backupTo(const std::string& path);
+    void backupTo(const std::string& path) override;
     // Replaces the open database with a backup copy (FR-21). The backup is checked first.
-    void restoreFrom(const std::string& path);
+    void restoreFrom(const std::string& path) override;
 
     void begin() override;
     void commit() override;

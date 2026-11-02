@@ -19,6 +19,22 @@ std::string describe(const SubmissionView& v) {
     return text;
 }
 
+// Asks until the HoD types one or more numbers, each from 1 to max (UC12 step 4).
+std::set<int> readChosenNumbers(ConsoleIO& io, int max) {
+    while (true) {
+        std::istringstream numbers(io.readText("Numbers separated by spaces, e.g. 1 3 4: ", 500));
+        std::set<int> chosen;
+        int n = 0;
+        bool ok = true;
+        while (numbers >> n) {
+            if (n < 1 || n > max) ok = false;
+            chosen.insert(n);
+        }
+        if (ok && numbers.eof() && !chosen.empty()) return chosen;
+        io.info("Please type numbers from 1 to " + std::to_string(max) + ".");
+    }
+}
+
 }  // namespace
 
 void HodMenu::handle(User& user, MenuOption option) {
@@ -75,21 +91,8 @@ void HodMenu::moderate(const HeadOfDepartment& hod) {
     if (how == 0) {
         for (const SubmissionView& v : list) ids.push_back(v.submissionId);
     } else {
-        while (ids.empty()) {
-            std::istringstream numbers(
-                io_.readText("Numbers separated by spaces, e.g. 1 3 4: ", 500));
-            std::set<int> chosen;
-            int n = 0;
-            bool ok = true;
-            while (numbers >> n) {
-                if (n < 1 || n > static_cast<int>(list.size())) ok = false;
-                chosen.insert(n);
-            }
-            if (!ok || !numbers.eof() || chosen.empty()) {
-                io_.info("Please type numbers from 1 to " + std::to_string(list.size()) + ".");
-                continue;
-            }
-            for (int c : chosen) ids.push_back(list[static_cast<std::size_t>(c - 1)].submissionId);
+        for (const int c : readChosenNumbers(io_, static_cast<int>(list.size()))) {
+            ids.push_back(list[static_cast<std::size_t>(c - 1)].submissionId);
         }
     }
     if (!io_.confirm("Approve " + std::to_string(ids.size()) + " mark(s)?")) return;
@@ -140,23 +143,9 @@ void HodMenu::release(const HeadOfDepartment& hod) {
 
 // UC14 (FR-20): always limited to the HoD's own department by the service.
 void HodMenu::viewAudit(const HeadOfDepartment& hod) {
-    AuditFilter filter;
-    const int how =
-        io_.choose("Audit log", {"All mark changes in my department", "Only one course",
-                                 "Only one assignment", "Only one student (by number)"});
-    if (how < 0) return;
-    if (how == 1 || how == 2) {
-        const auto a = pickAssignment(hod);
-        if (!a) return;
-        if (how == 1) {
-            filter.courseId = a->assignment.getCourseId();
-        } else {
-            filter.assignmentId = a->assignment.getId();
-        }
-    } else if (how == 3) {
-        filter.studentId = io_.readInt("Student user number: ", 1, 1000000000);
-    }
-    const auto entries = moderation_.viewAudit(hod, filter);
+    const auto filter = chooseAuditFilter(hod);
+    if (!filter) return;
+    const auto entries = moderation_.viewAudit(hod, *filter);
     io_.heading("Audit log (" + std::to_string(entries.size()) + " entries)");
     for (const AuditEntry& e : entries) {
         const std::string before = e.oldRawMark && e.oldFinalMark
@@ -168,6 +157,27 @@ void HodMenu::viewAudit(const HeadOfDepartment& hod) {
         io_.info("    by " + moderation_.nameOf(e.changedBy) +
                  (e.reason.empty() ? "" : ", reason: " + e.reason));
     }
+}
+
+// The four audit views of UC14: everything, one course, one assignment or one student.
+std::optional<AuditFilter> HodMenu::chooseAuditFilter(const HeadOfDepartment& hod) {
+    AuditFilter filter;
+    const int how =
+        io_.choose("Audit log", {"All mark changes in my department", "Only one course",
+                                 "Only one assignment", "Only one student (by number)"});
+    if (how < 0) return std::nullopt;
+    if (how == 3) {
+        filter.studentId = io_.readInt("Student user number: ", 1, 1000000000);
+    } else if (how != 0) {
+        const auto a = pickAssignment(hod);
+        if (!a) return std::nullopt;
+        if (how == 1) {
+            filter.courseId = a->assignment.getCourseId();
+        } else {
+            filter.assignmentId = a->assignment.getId();
+        }
+    }
+    return filter;
 }
 
 }  // namespace lms

@@ -63,6 +63,7 @@ std::vector<Submission> SqliteSubmissionRepository::loadAll(Statement& s) {
         rows.push_back(r);
     }
     std::vector<Submission> out;
+    out.reserve(rows.size());
     for (const Row& r : rows) {
         out.emplace_back(r.id, r.assignmentId, r.studentId, r.status, versionsOf(r.id), r.mark,
                          r.moderatedBy, r.moderatedAt, r.releasedBy, r.releasedAt);

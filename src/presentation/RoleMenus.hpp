@@ -25,6 +25,8 @@ protected:
 private:
     void viewAssignments(const Student& student);
     void submit(const Student& student);
+    std::optional<SubmissionPreview> askForFile(const Student& student, int assignmentId,
+                                                std::string& path);
     void viewResults(const Student& student);
 
     AssignmentService& assignments_;
@@ -66,6 +68,7 @@ private:
     void amend(const HeadOfDepartment& hod);
     void release(const HeadOfDepartment& hod);
     void viewAudit(const HeadOfDepartment& hod);
+    std::optional<AuditFilter> chooseAuditFilter(const HeadOfDepartment& hod);
 
     ModerationService& moderation_;
 };

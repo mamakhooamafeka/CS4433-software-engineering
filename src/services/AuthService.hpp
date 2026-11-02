@@ -4,8 +4,10 @@
 #include "domain/Infrastructure.hpp"
 #include "domain/Repositories.hpp"
 
+#include <initializer_list>
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace lms {
 
@@ -33,6 +35,12 @@ public:
     int pendingWorkCount(const User& user);
 
 private:
+    // Submissions in the given statuses across the assignments of these courses.
+    int countSubmissions(const std::vector<Course>& courses,
+                         std::initializer_list<SubmissionStatus> statuses);
+    // Open assignments of the student's courses with no submission yet.
+    int countUnsubmitted(const User& student);
+
     IUserRepository& users_;
     ICourseRepository& courses_;
     IAssignmentRepository& assignments_;
