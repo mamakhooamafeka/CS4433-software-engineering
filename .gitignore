@@ -7,3 +7,6 @@ CMakeUserPresets.json
 *.db-journal
 submissions/
 backups/
+lms-data/
+*.log
+dist/

@@ -15,9 +15,11 @@ Everything needed to build, test and understand the system is in Git:
 | Quality configuration | `.clang-format`, `.clang-tidy` |
 | CI pipeline | `.github/workflows/ci.yml` |
 | Pull request checklist | `.github/pull_request_template.md` |
+| Release pipeline and packaging | `.github/workflows/release.yml`, `tools/` |
+| Deployment diagram | `docs/diagrams/` (draw.io, Visio and PNG) |
 | Documentation | `README.md`, `docs/` |
 
-Never committed (listed in `.gitignore`): build folders, the database file (`*.db`), submitted files, backups, the `lms-data` folder and log files. These are produced by running the program, contain user data, or can be rebuilt from the sources.
+Never committed (listed in `.gitignore`): build folders, the `dist` package folder, the database file (`*.db`), submitted files, backups, the `lms-data` folder and log files. These are produced by running the program, contain user data, or can be rebuilt from the sources.
 
 ## 2. Branching strategy
 
@@ -74,7 +76,7 @@ Each release is an **annotated tag** on a commit of `main`, with a GitHub Releas
 
 | Tag | Content |
 |---|---|
-| `v1.0.0` | First release: all of Phases 4 to 6 (implementation, tests, quality fixes) |
+| `v1.0.0` | First release: all of Phases 4 to 7 (implementation, tests, quality fixes, deployment package and documents) |
 | `v1.1.0` | Planned: change request CR1 (Phase 8) |
 
 ## 5. Release procedure
@@ -82,7 +84,8 @@ Each release is an **annotated tag** on a commit of `main`, with a GitHub Releas
 1. All work for the release is merged into `main` by pull requests, and CI on `main` is green.
 2. `CHANGELOG.md` is updated, and the version in `CMakeLists.txt` (`project(... VERSION x.y.z)`) is checked.
 3. An annotated tag is created on that commit: `git tag -a v1.0.0 -m "Release 1.0.0"`, then `git push origin v1.0.0`.
-4. A GitHub Release is created from the tag, with the release notes from `CHANGELOG.md`.
+4. Pushing the tag starts `.github/workflows/release.yml`. It builds and tests the tagged commit on Windows, makes the installation package with `tools/package-windows.ps1`, creates the GitHub Release with `docs/RELEASE_NOTES.md` as its text, and attaches `ModeratedLMS-x.y.z-windows-x64.zip`.
+5. Check the Release page: the zip is attached and the notes are right.
 
 ## 6. Branch protection on GitHub
 
@@ -98,7 +101,8 @@ Each release is an **annotated tag** on a commit of `main`, with a GitHub Releas
 | Job | What it does | Fails when |
 |---|---|---|
 | Linux build, tests and coverage | Builds with GCC, runs all tests, measures coverage | A test fails, or business-logic coverage is under 70% |
-| Windows build and tests | Builds with MSVC and vcpkg, runs all tests | The build or a test fails |
+| Windows build and tests | Builds with MSVC and vcpkg, runs all tests, makes a trial installation package | The build, a test or the packaging fails |
 | Static analysis | Runs cppcheck and clang-tidy with the project settings | Any finding |
+| Release (`release.yml`, only for `v*` tags) | Builds and tests the tagged commit, makes the package and attaches it to the GitHub Release | The build, a test or the packaging fails; then no package is published |
 
 Evidence: every run is listed under the repository's **Actions** tab. The first green run is linked in `docs/TEST_RESULTS.md`.
