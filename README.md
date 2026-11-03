@@ -11,6 +11,7 @@ A console Learning Management System for a secondary school: assignments, submis
 - **Appendices A to H:** [docs/appendices](docs/appendices/README.md) (traceability matrix, risk register, test results, user manuals, deployment, QA, CR1)
 - **Diagrams D1 to D12:** [docs/diagrams](docs/diagrams/README.md) (planning, use cases, design v1.0 and v1.1, deployment)
 - **Application:** the source code in this repository, and the ready Windows program on the [Releases page](https://github.com/mamakhooamafeka/CS4433-software-engineering/releases/latest) (v1.1.0)
+-  **Video presentation (15 minutes):** [Mafeka_202321161_video.mp4](https://github.com/mamakhooamafeka/CS4433-software-engineering/releases/download/v1.1.0/mafeka.m.m.202321161.mp4)
 
 **Build and run:** see [docs/BUILD.md](docs/BUILD.md).
 **Coding standard:** see [docs/CODING_STANDARD.md](docs/CODING_STANDARD.md).
